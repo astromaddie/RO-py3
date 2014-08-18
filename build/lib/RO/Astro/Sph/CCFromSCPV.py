@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import RO.PhysConst
 import RO.MathUtil
-from CCFromSC import *
+from .CCFromSC import *
 
 # Magic Numbers
 # if parallax is less than _MinParallax,
@@ -94,7 +94,7 @@ def ccFromSCPV (
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing ccFromSCPV"
+    print("testing ccFromSCPV")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -181,6 +181,6 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-14, atol=1.0e-9):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

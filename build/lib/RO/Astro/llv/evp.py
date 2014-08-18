@@ -9,8 +9,8 @@ __all__ = ["evp"]
 
 from math import sin, cos, pi, sqrt, fmod
 import numpy
-from prec import prec
-from epj import epj
+from .prec import prec
+from .epj import epj
 
 # Constants
 TWOPI = pi * 2.0
@@ -374,7 +374,7 @@ def evp (tdb, deqx = 0.0):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing evp"
+    print("testing evp")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -434,6 +434,6 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-7):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

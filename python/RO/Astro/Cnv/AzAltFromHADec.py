@@ -34,7 +34,7 @@ def azAltFromHADec (haDec, lat):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing azAltFromHADec"
+    print("testing azAltFromHADec")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -54,6 +54,6 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = azAltFromHADec(*testInput)
         if RO.SeqUtil.matchSequences(actualOutput, expectedOutput, rtol=1.0e-15):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

@@ -9,7 +9,7 @@ P.T.Wallace Starlink    30 December 1992
 import math
 import numpy
 import RO.PhysConst
-from euler import *
+from .euler import *
 
 def prebn (bep0, bep1):
     """
@@ -52,7 +52,7 @@ def prebn (bep0, bep1):
 
 
 if __name__ == "__main__":
-    print "testing prebn"
+    print("testing prebn")
     # testData is a list of duples consisting of:
     # - a tuple of input data for prebn
     # - the expected output matrix (a numpy.array)
@@ -81,8 +81,8 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = prebn(*testInput)
         if not numpy.allclose(actualOutput, expectedOutput, rtol=1e-15, atol=1e-15):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
 
 

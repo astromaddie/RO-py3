@@ -85,7 +85,7 @@ class PVT(object):
 
 
 if __name__ == "__main__":
-    print "\nrunning PVT test"
+    print("\nrunning PVT test")
     
     currTAI = RO.Astro.Tm.taiFromPySec() * RO.PhysConst.SecPerDay
 
@@ -100,8 +100,8 @@ if __name__ == "__main__":
 
     for i in range(5):
         t = RO.Astro.Tm.taiFromPySec() * RO.PhysConst.SecPerDay
-        print "\ntime =", t
+        print("\ntime =", t)
         for var in varList:
-            print var, "pos =", var.getPos(t)
+            print(var, "pos =", var.getPos(t))
         if i < 4:
             time.sleep(1)

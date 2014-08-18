@@ -86,7 +86,7 @@ History:
 """
 import sys
 import threading
-import Queue
+import queue
 import traceback
 import RO.AddCallback
 import RO.Constants
@@ -94,6 +94,7 @@ import RO.KeyVariable
 import RO.SeqUtil
 import RO.StringUtil
 from RO.Comm.Generic import Timer
+import collections
 
 # state constants
 Ready = 2
@@ -206,7 +207,7 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
                 raise ValueError("scriptClass=%r has no run method" % scriptClass)
         elif runFunc == None:
             raise ValueError("Must specify runFunc or scriptClass")
-        elif not callable(runFunc):
+        elif not isinstance(runFunc, collections.Callable):
             raise ValueError("runFunc=%r not callable" % (runFunc,))
 
         self.runFunc = runFunc
@@ -240,8 +241,8 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
           which is needlessly inefficient.
         """
         if self.master:
-            import Tkinter
-            self._privateWdg = Tkinter.Frame(self.master)
+            import tkinter
+            self._privateWdg = tkinter.Frame(self.master)
             self._privateWdg.bind("<Destroy>", self.__del__)
 
         if stateFunc:
@@ -280,9 +281,9 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
         if not self.debug:
             return
         try:
-            print msgStr
+            print(msgStr)
         except (TypeError, ValueError):
-            print repr(msgStr)
+            print(repr(msgStr))
 
     def getFullState(self):
         """Returns the current state as a tuple:
@@ -462,7 +463,7 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
             self._statusBar.setMsg(msg, severity)
             self.debugPrint(msg)
         else:
-            print msg
+            print(msg)
     
     def startCmd(self,
         actor="",
@@ -730,7 +731,7 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
             cmdDescr = "%s %s..." % (cmdVar.actor, cmdVar.cmdStr[0:MaxLen])
         else:
             cmdDescr = "%s %s" % (cmdVar.actor, cmdVar.cmdStr)
-        for key, values in msgDict.get("data", {}).iteritems():
+        for key, values in msgDict.get("data", {}).items():
             if key.lower() in _ErrKeys:
                 reason = values[0]
                 break
@@ -777,7 +778,7 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
             
             self._printState("_continue: before iteration")
             self._state = 0
-            possIter = self._iterStack[-1].next()
+            possIter = next(self._iterStack[-1])
             if hasattr(possIter, "next"):
                 self._iterStack.append(possIter)
                 self._iterID = self._getNextID(addLevel = True)
@@ -800,9 +801,9 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
         except SystemExit:
             self.__del__()
             sys.exit(0)
-        except ScriptError, e:
+        except ScriptError as e:
             self._setState(Failed, RO.StringUtil.strFromException(e))
-        except Exception, e:
+        except Exception as e:
             traceback.print_exc(file=sys.stderr)
             self._printFullState()
             self._setState(Failed, RO.StringUtil.strFromException(e))
@@ -812,8 +813,8 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
         Ignored unless _DebugState or self.debug true.
         """
         if _DebugState:
-            print "Script %s: %s: state=%s, iterID=%s, waiting=%s, iterStack depth=%s" % \
-                (self.name, prefix, self._state, self._iterID, self._waiting, len(self._iterStack))
+            print("Script %s: %s: state=%s, iterID=%s, waiting=%s, iterStack depth=%s" % \
+                (self.name, prefix, self._state, self._iterID, self._waiting, len(self._iterStack)))
     
     def _printFullState(self):
         """Print the full state to stderr
@@ -835,7 +836,7 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
         if self._cmdStatusBar:
             self._cmdStatusBar.setMsg(msg, severity)
         else:
-            print msg
+            print(msg)
     
     def __del__(self, evt=None):
         """Called just before the object is deleted.
@@ -863,7 +864,7 @@ class ScriptRunner(RO.AddCallback.BaseMixin):
                 self._reason = "keyboard interrupt"
             except SystemExit:
                 raise
-            except Exception, e:
+            except Exception as e:
                 self._state = Failed
                 self._reason = "endFunc failed: %s" % (RO.StringUtil.strFromException(e),)
                 traceback.print_exc(file=sys.stderr)
@@ -972,7 +973,7 @@ class _WaitBase(object):
         except ValueError:
             raise RuntimeError("Cancel function missing; did you forgot the 'yield' when calling a ScriptRunner method?")
         if self.scriptRunner.debug and val != None:
-            print "wait returns %r" % (val,)
+            print("wait returns %r" % (val,))
         self.scriptRunner._continue(self._iterID, val)
 
 
@@ -1108,7 +1109,7 @@ class _WaitKeyVar(_WaitBase):
                 argList.append("defVal=%r" % (defVal,))
             if waitNext:
                 argList.append("waitNext=%r" % (waitNext,))
-            print "waitKeyVar(%s)" % ", ".join(argList)
+            print("waitKeyVar(%s)" % ", ".join(argList))
 
             # prevent the call from failing by using None instead of Exception
             if self.defVal == Exception:
@@ -1159,10 +1160,10 @@ class _WaitThread(_WaitBase):
         self._pollTimer = Timer()
         _WaitBase.__init__(self, scriptRunner)
         
-        if not callable(func):
+        if not isinstance(func, collections.Callable):
             raise ValueError("%r is not callable" % func)
 
-        self.queue = Queue.Queue()
+        self.queue = queue.Queue()
         self.func = func
 
         self.threadObj = threading.Thread(target=self.threadFunc, args=args, kwargs=kargs)
@@ -1192,11 +1193,11 @@ class _WaitThread(_WaitBase):
 
 
 if __name__ == "__main__":
-    import Tkinter
+    import tkinter
     import RO.KeyDispatcher
     import time
 
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     
     dispatcher = RO.KeyDispatcher.KeyDispatcher()
     
@@ -1204,11 +1205,11 @@ if __name__ == "__main__":
 
     def initFunc(sr):
         global scriptList
-        print "%s init function called" % (sr,)
+        print("%s init function called" % (sr,))
         scriptList.append(sr)
 
     def endFunc(sr):
-        print "%s end function called" % (sr,)
+        print("%s end function called" % (sr,))
     
     def script(sr):
         def threadFunc(nSec):

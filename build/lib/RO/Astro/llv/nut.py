@@ -5,8 +5,8 @@ P.T.Wallace Starlink    1 January 1993
 2002-07-11 ROwen    Converted to Python.
 2007-04-24 ROwen    Converted from Numeric to numpy (in test code).
 """
-from nutc import nutc
-from euler import euler
+from .nutc import nutc
+from .euler import euler
 
 def nut (tdb):
     """
@@ -36,7 +36,7 @@ def nut (tdb):
 
 if __name__ == "__main__":
     import numpy
-    print "testing nut"
+    print("testing nut")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument for nut
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = nut(testInput)
         if not numpy.allclose(actualOutput, expectedOutput, rtol=1e-15, atol=1e-15):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
 

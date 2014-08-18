@@ -6,13 +6,13 @@ History:
 """
 __all__ = ['Menubutton']
 
-import Tkinter
+import tkinter
 import RO.AddCallback
 import RO.Constants
 import RO.TkUtil
-import CtxMenu
+from . import CtxMenu
 
-class Menubutton(Tkinter.Menubutton, CtxMenu.CtxMenuMixin):
+class Menubutton(tkinter.Menubutton, CtxMenu.CtxMenuMixin):
     def __init__(self,
         master,
         helpText = None,
@@ -42,7 +42,7 @@ class Menubutton(Tkinter.Menubutton, CtxMenu.CtxMenuMixin):
         # but configure has the code to work around Tk MacOS bugs, so...
         # first construct the object, then call configure with the width
         width = kwArgs.pop("width", None)
-        Tkinter.Menubutton.__init__(self, master = master, **kwArgs)
+        tkinter.Menubutton.__init__(self, master = master, **kwArgs)
         if width is not None:
             self.configure(width=width)
 
@@ -65,16 +65,16 @@ class Menubutton(Tkinter.Menubutton, CtxMenu.CtxMenuMixin):
         Warning: if you want the state to be "active" you must set that explicitly.
         """
         if doEnable:
-            self["state"] = Tkinter.NORMAL
+            self["state"] = tkinter.NORMAL
         else:
-            self["state"] = Tkinter.DISABLED
+            self["state"] = tkinter.DISABLED
     
     def getEnable(self):
         """Return True if widget is enabled, False otherwise
 
         Enabled is defined as the state is not "disabled" (thus "enabled" or "active").
         """
-        return self["state"] != Tkinter.DISABLED
+        return self["state"] != tkinter.DISABLED
 
     def configure(self, argDict=None, **kwArgs):
         """Overridden version of configure that applies a width correction, if necessary
@@ -92,7 +92,7 @@ class Menubutton(Tkinter.Menubutton, CtxMenu.CtxMenuMixin):
                 hasBitmap = bool(kwArgs.get("bitmap", self["bitmap"])),
                 showIndicator = kwArgs.get("indicatoron", self["indicatoron"]),
             )
-        Tkinter.Menubutton.configure(self, **kwArgs)
+        tkinter.Menubutton.configure(self, **kwArgs)
 
     def _computeCorrectedWidth(self, width, hasBitmap, showIndicator):
         """Compute corrected width to overcome Tcl/Tk bugs

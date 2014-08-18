@@ -76,7 +76,7 @@ import datetime
 import time
 
 import numpy
-import Tkinter
+import tkinter
 import matplotlib
 import matplotlib.dates
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -84,7 +84,7 @@ from RO.TkUtil import Timer
 
 __all__ = ["StripChartWdg"]
 
-class StripChartWdg(Tkinter.Frame):
+class StripChartWdg(tkinter.Frame):
     """A widget to changing values in real time as a strip chart
     
     Usage Hints:
@@ -138,7 +138,7 @@ class StripChartWdg(Tkinter.Frame):
         - cnvTimeFunc: a function that takes a POSIX timestamp (e.g. time.time()) and returns matplotlib days;
             typically an instance of TimeConverter; defaults to TimeConverter(useUTC=False)
         """
-        Tkinter.Frame.__init__(self, master)
+        tkinter.Frame.__init__(self, master)
         
         self._timeRange = timeRange
         self._isVisible = self.winfo_ismapped()
@@ -481,7 +481,7 @@ class TimeConverter(object):
 
 if __name__ == "__main__":   
     import RO.Alg
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     stripChart = StripChartWdg(
         master = root,
         timeRange = 60,
@@ -504,7 +504,7 @@ if __name__ == "__main__":
     stripChart.subplotArr[1].legend(loc=3)
 
     # stop major time ticks from jumping around as time advances:
-    stripChart.xaxis.set_major_locator(matplotlib.dates.SecondLocator(bysecond=range(0,60,10)))
+    stripChart.xaxis.set_major_locator(matplotlib.dates.SecondLocator(bysecond=list(range(0,60,10))))
     
     varDict = {
         countsLine: RO.Alg.ConstrainedGaussianRandomWalk(1, 0.2, 0, 2.8),
@@ -518,7 +518,7 @@ if __name__ == "__main__":
         - interval: interval between updates (sec)
         """
         var = varDict[line]
-        line.addPoint(var.next())
+        line.addPoint(next(var))
         Timer(interval, addRandomValues, line, interval)
 
     addRandomValues(countsLine, interval=0.5)
@@ -527,10 +527,10 @@ if __name__ == "__main__":
     
     def deleteSatConstLine():
         stripChart.removeLine(satConstLine)
-    Tkinter.Button(root, text="Delete Saturated Counts", command=deleteSatConstLine).pack()
+    tkinter.Button(root, text="Delete Saturated Counts", command=deleteSatConstLine).pack()
 
     def deleteWalk1():
         stripChart.removeLine(walk1Line)
-    Tkinter.Button(root, text="Delete Walk 1", command=deleteWalk1).pack()
+    tkinter.Button(root, text="Delete Walk 1", command=deleteWalk1).pack()
 
     root.mainloop()

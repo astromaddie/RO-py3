@@ -40,4 +40,4 @@ class ObserverData (object):
         self.p = numpy.array((polarDist, 0.0, zDist))     
 
 if __name__ == "__main__":
-    print "To test ObserverData, run the tests for topoFromGeo"
+    print("To test ObserverData, run the tests for topoFromGeo")

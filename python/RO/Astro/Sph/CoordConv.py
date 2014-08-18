@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-import Const
+from . import Const
 from RO.Astro import Cnv
 import RO.MathUtil
-from CCFromSCPV import *
-from CCFromSCPVOff import *
-from SCFromCCPVOff import *
+from .CCFromSCPV import *
+from .CCFromSCPVOff import *
+from .SCFromCCPVOff import *
 
 def coordConv (
         fromPos, fromSys, fromDate, toSys, toDate,

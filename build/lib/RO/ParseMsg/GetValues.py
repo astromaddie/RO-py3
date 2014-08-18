@@ -12,7 +12,7 @@ History:
 2004-09-14 ROwen    Renamed variable str in test code.
 """
 import re
-import GetString
+from . import GetString
 
 _StartRE = re.compile(r"\s*(?P<first>[=;])\s*(?:(?P<next>\S)|$)")
 
@@ -39,8 +39,8 @@ Exceptions:
 
     mo = _StartRE.match(astr, begInd)
     if mo == None:
-        raise SyntaxError, "cannot find value(s) starting at %d in :%s:" % \
-            (begInd, astr)
+        raise SyntaxError("cannot find value(s) starting at %d in :%s:" % \
+            (begInd, astr))
     sepChar = mo.group('first')
     nextInd = mo.start('next')
     if nextInd < 0:
@@ -68,8 +68,8 @@ Exceptions:
 #           print "looking for an undelimited word starting at %d" % (nextInd)
             mo = _UndelimWordRE.match(astr, nextInd)
             if mo == None:
-                raise SyntaxError, "cannot find an undelimited word starting at %d in :%s:" % \
-                    (nextInd, astr)
+                raise SyntaxError("cannot find an undelimited word starting at %d in :%s:" % \
+                    (nextInd, astr))
             value = mo.group('str')
             nextInd = mo.start('next')
             if (nextInd < 0):
@@ -91,12 +91,12 @@ Exceptions:
         if astr[nextInd] == ';':
             nextIsKey = True
         elif astr[nextInd] != ',':
-            print "bug; expected comma or semicolon as next token; giving up on line"
+            print("bug; expected comma or semicolon as next token; giving up on line")
             nextInd = None
             break
 
         if (nextInd <= prevInd) and not nextIsKey:
-            print "bug: nextInd = %d <= prevInd = %d" % (nextInd, prevInd)
+            print("bug: nextInd = %d <= prevInd = %d" % (nextInd, prevInd))
             nextInd = None
             break
 
@@ -106,8 +106,8 @@ Exceptions:
                 nextInd = ind
                 break
         else:
-            print "ignoring separator \"%s\" at end of data :%s:" % \
-                (astr[nextInd], astr)
+            print("ignoring separator \"%s\" at end of data :%s:" % \
+                (astr[nextInd], astr))
             nextInd = None
             break
 
@@ -148,10 +148,10 @@ if __name__ == '__main__':
     for testStr in testList:
         try:
             (data, nextInd) = getValues(testStr)
-            print "getValues('%s') = %s;" % (testStr, `(data, nextInd)`),
+            print("getValues('%s') = %s;" % (testStr, repr((data, nextInd))), end=' ')
             if nextInd != None:
-                print "str[%d] = \"%s\"" % (nextInd, testStr[nextInd])
+                print("str[%d] = \"%s\"" % (nextInd, testStr[nextInd]))
             else:
-                print "end of string"
-        except StandardError, e:
-            print "failed with error: %s" % (e)
+                print("end of string")
+        except Exception as e:
+            print("failed with error: %s" % (e))

@@ -423,7 +423,7 @@ def nutc (tdb):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing nutc"
+    print("testing nutc")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -443,7 +443,7 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = nutc(testInput)
         if RO.SeqUtil.matchSequences(actualOutput, expectedOutput, rtol=1e-15):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
 

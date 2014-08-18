@@ -53,17 +53,17 @@ import atexit
 import os
 import sys
 import traceback
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import weakref
-import Bindings
-import Tkinter
+from . import Bindings
+import tkinter
 import RO.AddCallback
 import RO.Constants
 import RO.MathUtil
 from RO.TkUtil import Timer
 from RO.Comm.FTPGet import FTPGet
 import RO.Wdg
-import CtxMenu
+from . import CtxMenu
 
 _StatusInterval = 0.200 # time between status checks (sec)
 
@@ -82,7 +82,7 @@ class FTPCallback(object):
         if self.callFunc:
             try:
                 self.callFunc(self.ftpGet)
-            except Exception, e:
+            except Exception as e:
                 errMsg = "ftpGet callback %r failed: %s" % (self.callFunc, e)
                 sys.stderr.write(errMsg + "\n")
                 traceback.print_exc(file=sys.stderr)
@@ -93,12 +93,12 @@ class FTPCallback(object):
     def clear(self):
         """Clear the callback"""
         if _DebugMem:
-            print "FTPCallback(%s) clear" % (self.ftpGet,)
+            print("FTPCallback(%s) clear" % (self.ftpGet,))
         self.ftpGet = None
         self.callFunc = None
     
 
-class FTPLogWdg(Tkinter.Frame):
+class FTPLogWdg(tkinter.Frame):
     """A widget to initiate file get via ftp, to display the status
     of the transfer and to allow users to abort the transfer.
     
@@ -119,7 +119,7 @@ class FTPLogWdg(Tkinter.Frame):
         maxLines = 500,
         helpURL = None,
     **kargs):
-        Tkinter.Frame.__init__(self, master = master, **kargs)
+        tkinter.Frame.__init__(self, master = master, **kargs)
         self._memDebugDict = {}
         
         self.maxLines = maxLines
@@ -129,11 +129,11 @@ class FTPLogWdg(Tkinter.Frame):
         self.dispList = []  # list of displayed ftpGets
         self.getQueue = []  # list of unfinished (ftpGet, stateLabel, ftpCallback) triples
         
-        self.yscroll = Tkinter.Scrollbar (
+        self.yscroll = tkinter.Scrollbar (
             master = self,
             orient = "vertical",
         )
-        self.text = Tkinter.Text (
+        self.text = tkinter.Text (
             master = self,
             yscrollcommand = self.yscroll.set,
             wrap = "none",
@@ -154,7 +154,7 @@ class FTPLogWdg(Tkinter.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         
-        detFrame = Tkinter.Frame(self)
+        detFrame = tkinter.Frame(self)
             
         gr = RO.Wdg.Gridder(detFrame, sticky="ew")
         
@@ -349,7 +349,7 @@ class FTPLogWdg(Tkinter.Frame):
             return
         objID = id(obj)
         def refGone(ref=None, objID=objID, objName=objName):
-            print "%s deleting %s" % (self.__class__.__name__, objName,)
+            print("%s deleting %s" % (self.__class__.__name__, objName,))
             del(self._memDebugDict[objID])
 
         self._memDebugDict[objID] = weakref.ref(obj, refGone)
@@ -440,7 +440,7 @@ class FTPLogWdg(Tkinter.Frame):
 
 
 if __name__ == "__main__":
-    from PythonTk import *
+    from .PythonTk import *
     root = PythonTk()
 
     row = 0
@@ -451,9 +451,9 @@ if __name__ == "__main__":
     testFrame.grid(row=row, column=0, columnspan=2, sticky="nsew")
     row += 1
 
-    overwriteVar = Tkinter.BooleanVar()
+    overwriteVar = tkinter.BooleanVar()
     overwriteVar.set(True)
-    overwriteWdg = Tkinter.Checkbutton(
+    overwriteWdg = tkinter.Checkbutton(
         master=root,
         text="Overwrite",
         variable=overwriteVar,
@@ -461,14 +461,14 @@ if __name__ == "__main__":
     overwriteWdg.grid(row=row, column=1, sticky="w")
     row += 1
 
-    Tkinter.Label(root, text="ToPath:").grid(row=row, column=0, sticky="e")
-    toPathWdg = Tkinter.Entry(root)
+    tkinter.Label(root, text="ToPath:").grid(row=row, column=0, sticky="e")
+    toPathWdg = tkinter.Entry(root)
     toPathWdg.insert(0, "tempfile")
     toPathWdg.grid(row=row, column=1, sticky="ew")
     row += 1
     
-    Tkinter.Label(root, text="FromURL:").grid(row=row, column=0, sticky="e")
-    fromURLWdg = Tkinter.Entry(root)
+    tkinter.Label(root, text="FromURL:").grid(row=row, column=0, sticky="e")
+    fromURLWdg = tkinter.Entry(root)
     fromURLWdg.grid(row=row, column=1, sticky="ew")
     row += 1
 

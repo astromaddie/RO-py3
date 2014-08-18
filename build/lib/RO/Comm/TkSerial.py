@@ -28,7 +28,7 @@ History:
 __all__ = ["TkSerial", "NullSerial"]
 import sys
 import traceback
-import Tkinter
+import tkinter
 import RO.SeqUtil
 import RO.TkUtil
 try:
@@ -93,7 +93,7 @@ class TkBaseSerial(object):
         Called just after the serial is closed.
         """
         #print "%s._clearCallbacks()" % (self,)
-        for tclFunc in self._tkCallbackDict.itervalues():
+        for tclFunc in self._tkCallbackDict.values():
             tclFunc.deregister()
         self._tkCallbackDict = dict()
         self._stateCallback = None
@@ -123,7 +123,7 @@ class TkBaseSerial(object):
         if stateCallback:
             try:
                 stateCallback(self)
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("%s state callback %s failed: %s\n" % (self, self._stateCallback, e,))
                 traceback.print_exc(file=sys.stderr)
     
@@ -183,7 +183,7 @@ class TkSerial(TkBaseSerial):
         )
         self._readCallback = readCallback
         
-        self._tk = Tkinter.StringVar()._tk
+        self._tk = tkinter.StringVar()._tk
 
         self._chanID = 0
         try:
@@ -194,7 +194,7 @@ class TkSerial(TkBaseSerial):
             cfgArgs = [
                 "-blocking", 0,
             ]
-            for key, value in chanKArgs.iteritems():
+            for key, value in chanKArgs.items():
                 cfgArgs += ["-" + key, value]
             cfgArgs += ["-mode", "%s,%s,%s,%s" % (int(baud), parity, int(dataBits), int(stopBits))]
             if buffering != None:
@@ -210,7 +210,7 @@ class TkSerial(TkBaseSerial):
             # and is just used to detect state
             self._setSockCallback(self._doRead)
 
-        except Tkinter.TclError, e:
+        except tkinter.TclError as e:
             raise RuntimeError(e)
 
     def close(self, isOK=True, reason=None):
@@ -251,7 +251,7 @@ class TkSerial(TkBaseSerial):
                 retVal = self._tk.call('read', self._chanID)
             else:
                 retVal = self._tk.call('read', self._chanID, nChar)
-        except Exception, e:
+        except Exception as e:
             self.close(isOK = False, reason = str(e))
             raise
         #print "read returning %r" % retVal
@@ -272,7 +272,7 @@ class TkSerial(TkBaseSerial):
         self._assertConn()
         try:
             readStr = self._tk.call('gets', self._chanID)
-        except Exception, e:
+        except Exception as e:
             self.close(isOK = False, reason = str(e))
             raise
         if not readStr:
@@ -302,7 +302,7 @@ class TkSerial(TkBaseSerial):
         self._assertConn()
         try:
             self._tk.call('puts', '-nonewline', self._chanID, data)
-        except Exception, e:
+        except Exception as e:
             self.close(isOK = False, reason=str(e))
             raise
         self._assertConn()
@@ -316,7 +316,7 @@ class TkSerial(TkBaseSerial):
         self._assertConn()
         try:
             self._tk.call('puts', self._chanID, data)
-        except Exception, e:
+        except Exception as e:
             self.close(isOK = False, reason=str(e))
             raise
         self._assertConn()
@@ -340,7 +340,7 @@ class TkSerial(TkBaseSerial):
         if self._readCallback:
             try:
                 self._readCallback(self)
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("%s read callback %s failed: %s\n" % (self, self._readCallback, e,))
                 traceback.print_exc(file=sys.stderr)
 
@@ -366,7 +366,7 @@ class TkSerial(TkBaseSerial):
         
         try:
             self._tk.call('fileevent', self._chanID, typeStr, tkFuncName)
-        except Tkinter.TclError, e:
+        except tkinter.TclError as e:
             if tclFunc:
                 tclFunc.deregister()
             raise RuntimeError(e)

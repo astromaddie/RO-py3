@@ -81,12 +81,12 @@ PlatformName = None
 
 try:
     # try Mac
-    from getMacDirs import getAppDirs, getAppSuppDirs, getDocsDir, getPrefsDirs
+    from .getMacDirs import getAppDirs, getAppSuppDirs, getDocsDir, getPrefsDirs
     PlatformName = 'mac'
 except ImportError:
     # try Windows
     try:
-        from getWinDirs import getAppDirs, getAppSuppDirs, getDocsDir, getPrefsDirs
+        from .getWinDirs import getAppDirs, getAppSuppDirs, getDocsDir, getPrefsDirs
         PlatformName = 'win'
     except ImportError:
         # assume Unix
@@ -140,13 +140,13 @@ def getPrefsPrefix():
 
 
 if __name__ == '__main__':
-    print 'PlatformName     = %r' % PlatformName
-    print 'getHomeDir()     = %r' % getHomeDir()
-    print 'getPrefsPrefix() = %r' % getPrefsPrefix()
-    print
+    print('PlatformName     = %r' % PlatformName)
+    print('getHomeDir()     = %r' % getHomeDir())
+    print('getPrefsPrefix() = %r' % getPrefsPrefix())
+    print()
     for inclNone in (False, True):
-        print 'getAppDirs(%s)     = %r' % (inclNone, getAppDirs(inclNone))
-        print 'getAppSuppDirs(%s) = %r' % (inclNone, getAppSuppDirs(inclNone))
-        print 'getPrefsDirs(%s)   = %r' % (inclNone, getPrefsDirs(inclNone))
-    print 'getDocsDir()         = %r' % getDocsDir()
+        print('getAppDirs(%s)     = %r' % (inclNone, getAppDirs(inclNone)))
+        print('getAppSuppDirs(%s) = %r' % (inclNone, getAppSuppDirs(inclNone)))
+        print('getPrefsDirs(%s)   = %r' % (inclNone, getPrefsDirs(inclNone)))
+    print('getDocsDir()         = %r' % getDocsDir())
 

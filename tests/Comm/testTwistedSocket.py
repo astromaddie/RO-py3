@@ -101,7 +101,7 @@ class TestRunner(object):
 
     def writeNext(self):
         try:
-            writeData, writeLine, self.readData, self.readLine = self.sendRcvListIter.next()
+            writeData, writeLine, self.readData, self.readLine = next(self.sendRcvListIter)
         except StopIteration:
             self.end(isOK=True)
             return

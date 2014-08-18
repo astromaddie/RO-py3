@@ -36,6 +36,7 @@ History:
 """
 import sys
 import traceback
+import collections
 
 __all__ = ["safeCall", "safeCall2", "BaseMixin", "TkButtonMixin", "TkVarMixin"]
 
@@ -53,7 +54,7 @@ def safeCall(func, *args, **kwargs):
     """
     try:
         return func(*args, **kwargs)
-    except Exception, e:
+    except Exception as e:
         sys.stderr.write("%s(*%s, **%s) failed: %s\n" % (func, args, kwargs, e,))
         traceback.print_exc(file=sys.stderr)
 
@@ -74,7 +75,7 @@ def safeCall2(descr, func, *args, **kwargs):
     """
     try:
         return func(*args, **kwargs)
-    except Exception, e:
+    except Exception as e:
         sys.stderr.write("%s %s(*%s, **%s) failed: %s\n" % (descr, func, args, kwargs, e,))
         traceback.print_exc(file=sys.stderr)
 
@@ -142,8 +143,8 @@ class BaseMixin(object):
         if callFunc == None:
             return
 
-        if not callable(callFunc):
-            raise ValueError, "callFunc %r is not callable" % (callFunc,)
+        if not isinstance(callFunc, collections.Callable):
+            raise ValueError("callFunc %r is not callable" % (callFunc,))
         
         # add new function
         if callFunc not in self._callbacks:
@@ -261,8 +262,8 @@ class TkButtonMixin(BaseMixin):
         )
 
         if command != None:
-            if not callable(command):
-                raise ValueError, "command %r is not callable" % (command,)
+            if not isinstance(command, collections.Callable):
+                raise ValueError("command %r is not callable" % (command,))
             def doCommand(wdg):
                 return command()
             self.addCallback(doCommand)

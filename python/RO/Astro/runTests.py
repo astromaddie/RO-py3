@@ -24,7 +24,7 @@ for dirpath, dirnames, filenames in os.walk("."):
     
 
     # test all modules
-    print "Testing modules in", os.path.basename(dirpath)
+    print("Testing modules in", os.path.basename(dirpath))
     for filename in filenames:
         if not filename.endswith(".py"):
             continue

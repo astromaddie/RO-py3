@@ -56,8 +56,9 @@ import sys
 from RO.Comm.BaseSocket import NullTCPSocket
 from RO.AddCallback import safeCall2
 import RO.Comm.Generic
+import collections
 if RO.Comm.Generic.getFramework() is None:
-    print "Warning: RO.Comm.Generic framework not set; setting to tk"
+    print("Warning: RO.Comm.Generic framework not set; setting to tk")
     RO.Comm.Generic.setFramework("tk")
 from RO.Comm.Generic import TCPSocket
 
@@ -164,7 +165,7 @@ class TCPConnection(object):
           - the socket (a TCPSocket object)
           - the data read; in line mode the line terminator is stripped
         """
-        assert callable(readCallback), "read callback not callable"
+        assert isinstance(readCallback, collections.Callable), "read callback not callable"
         self._userReadCallbacks.append(readCallback)
     
     def addStateCallback(self, stateCallback, callNow=False):
@@ -174,7 +175,7 @@ class TCPConnection(object):
         - stateCallback: the function; it is sent one argument: this TCPConnection
         - callNow: call the connection function immediately?
         """
-        assert callable(stateCallback)
+        assert isinstance(stateCallback, collections.Callable)
         self._stateCallbacks.append(stateCallback)
         if callNow:
             stateCallback(self)
@@ -355,7 +356,7 @@ class TCPConnection(object):
         #print "_setState(newState=%s, reason=%s); self._stateCallbacks=%s" % (newState, reason, self._stateCallbacks)
         oldStateReason = (self._state, self._reason)
         if newState not in self._AllStates:
-            raise RuntimeError, "unknown connection state: %s" % (newState,)
+            raise RuntimeError("unknown connection state: %s" % (newState,))
         self._state = newState
         if reason != None:
             self._reason = str(reason)
@@ -409,8 +410,8 @@ class TCPConnection(object):
 if __name__ == "__main__":
     """Demo using a simple echo server.
     """
-    import Tkinter
-    root = Tkinter.Tk()
+    import tkinter
+    root = tkinter.Tk()
     root.withdraw()
     from RO.Comm.Generic import TCPServer
     from RO.TkUtil import Timer
@@ -426,7 +427,7 @@ if __name__ == "__main__":
         "string with 3 quoted nulls: 1 \\0 2 \\0 3 \\0 end",
         '"quoted string followed by carriage return"\r',
         '',
-        u"unicode string",
+        "unicode string",
         "string with newline: \n end",
         "string with carriage return: \r end",
         "quit",
@@ -437,8 +438,8 @@ if __name__ == "__main__":
     def runTest():
         global clientConn
         try:
-            testStr = strIter.next()
-            print "Client writing %r" % (testStr,)
+            testStr = next(strIter)
+            print("Client writing %r" % (testStr,))
             clientConn.writeLine(testStr)
             Timer(0.001, runTest)
         except StopIteration:
@@ -446,9 +447,9 @@ if __name__ == "__main__":
 
     def clientRead(sock, outStr):
         global clientConn
-        print "Client read    %r" % (outStr,)
+        print("Client read    %r" % (outStr,))
         if outStr and outStr.strip() == "quit":
-            print "*** Data exhausted; disconnecting client connection"
+            print("*** Data exhausted; disconnecting client connection")
             clientConn.disconnect()
             
 
@@ -456,28 +457,28 @@ if __name__ == "__main__":
         global didConnect, echoServer
         state, reason = conn.fullState
         if reason:
-            print "Client %s: %s" % (state, reason)
+            print("Client %s: %s" % (state, reason))
         else:
-            print "Client %s" % (state,)
+            print("Client %s" % (state,))
         if conn.isConnected:
-            print "*** Client connected; now sending test data"
+            print("*** Client connected; now sending test data")
             didConnect = True
             runTest()
         elif didConnect is conn.isDone:
-            print "*** Client disconnected; closing echo server ***"
+            print("*** Client disconnected; closing echo server ***")
             echoServer.close()
 
     def serverState(server):
         state, reason = server.fullState
         if reason:
-            print "Server %s: %s" % (state, reason)
+            print("Server %s: %s" % (state, reason))
         else:
-            print "Server %s" % (state,)
+            print("Server %s" % (state,))
         if server.isReady:
-            print "*** Echo server ready; now starting up a client"
+            print("*** Echo server ready; now starting up a client")
             startClient()
         elif server.isDone:
-            print "*** Halting the tcl event loop"
+            print("*** Halting the tcl event loop")
             root.quit()
 
     def startClient():
@@ -505,7 +506,7 @@ if __name__ == "__main__":
             if readLine is not None:
                 sock.writeLine(readLine)
 
-    print "*** Starting echo server on port %s" % (port,)
+    print("*** Starting echo server on port %s" % (port,))
     echoServer = EchoServer(port = port, stateCallback = serverState)
     
     root.mainloop()

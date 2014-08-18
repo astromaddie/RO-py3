@@ -16,14 +16,14 @@ History:
 """
 __all__ = ['Button', 'Radiobutton']
 
-import Tkinter
+import tkinter
 import RO.AddCallback
 import RO.Constants
 import RO.TkUtil
-import CtxMenu
-from SeverityMixin import SeverityActiveMixin
+from . import CtxMenu
+from .SeverityMixin import SeverityActiveMixin
 
-class Button (Tkinter.Button, RO.AddCallback.TkButtonMixin, CtxMenu.CtxMenuMixin,
+class Button (tkinter.Button, RO.AddCallback.TkButtonMixin, CtxMenu.CtxMenuMixin,
     SeverityActiveMixin):
     def __init__(self,
         master,
@@ -46,7 +46,7 @@ class Button (Tkinter.Button, RO.AddCallback.TkButtonMixin, CtxMenu.CtxMenuMixin
         """
         self.helpText = helpText
 
-        Tkinter.Button.__init__(self, master = master, **kargs)
+        tkinter.Button.__init__(self, master = master, **kargs)
         
         RO.AddCallback.TkButtonMixin.__init__(self, callFunc, False, **kargs)
         
@@ -64,19 +64,19 @@ class Button (Tkinter.Button, RO.AddCallback.TkButtonMixin, CtxMenu.CtxMenuMixin
         Warning: if you want the state to be "active" you must set that explicitly.
         """
         if doEnable:
-            self["state"] = Tkinter.NORMAL
+            self["state"] = tkinter.NORMAL
         else:
-            self["state"] = Tkinter.DISABLED
+            self["state"] = tkinter.DISABLED
     
     def getEnable(self):
         """Return True if widget is enabled, False otherwise
 
         Enabled is defined as the state is not "disabled" (thus "enabled" or "active").
         """
-        return self["state"] != Tkinter.DISABLED
+        return self["state"] != tkinter.DISABLED
 
 
-class Radiobutton (Tkinter.Radiobutton, CtxMenu.CtxMenuMixin, SeverityActiveMixin):
+class Radiobutton (tkinter.Radiobutton, CtxMenu.CtxMenuMixin, SeverityActiveMixin):
     def __init__(self,
         master,
         helpText = None,
@@ -95,7 +95,7 @@ class Radiobutton (Tkinter.Radiobutton, CtxMenu.CtxMenuMixin, SeverityActiveMixi
 
         # if bitmap is not a constructor parameter then the active button is not highlighted on Aqua Tk 8.5
         bitmap = kargs.pop("bitmap", None)
-        Tkinter.Radiobutton.__init__(self, master = master, bitmap = bitmap)
+        tkinter.Radiobutton.__init__(self, master = master, bitmap = bitmap)
         self.configure(kargs) # call overridden configure to fix width, if necessary
         CtxMenu.CtxMenuMixin.__init__(self,
             helpURL = helpURL,
@@ -119,7 +119,7 @@ class Radiobutton (Tkinter.Radiobutton, CtxMenu.CtxMenuMixin, SeverityActiveMixi
                 width = kargs["width"],
                 hasBitmap = bool(kargs.get("bitmap", self["bitmap"])),
             )
-        Tkinter.Radiobutton.configure(self, **kargs)
+        tkinter.Radiobutton.configure(self, **kargs)
     
     def _computeCorrectedWidth(self, width, hasBitmap):
         """Compute corrected width to overcome Tcl/Tk bug

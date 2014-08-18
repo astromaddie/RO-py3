@@ -47,11 +47,11 @@ History:
 """
 import re
 
-AngstromStr = u"\N{ANGSTROM SIGN}"
-DegStr = u"\N{DEGREE SIGN}"
-DMSStr = DegStr + u"'\""
-LambdaStr = u"\u00c5" # for some reason this fails: u"\N{GREEK SMALL LETTER LAMBDA}"
-MuStr = u"\N{GREEK SMALL LETTER MU}"
+AngstromStr = "\N{ANGSTROM SIGN}"
+DegStr = "\N{DEGREE SIGN}"
+DMSStr = DegStr + "'\""
+LambdaStr = "\u00c5" # for some reason this fails: u"\N{GREEK SMALL LETTER LAMBDA}"
+MuStr = "\N{GREEK SMALL LETTER MU}"
 
 def dmsStrFromDeg (decDeg, nFields=3, precision=1, omitExtraFields = False):
     """Convert a number to a sexagesimal string with 1-3 fields.
@@ -321,7 +321,7 @@ def prettyDict(aDict, entrySepStr = "\n", keyValSepStr = ": "):
     
     Returns a string containing the pretty-printed dictionary
     """
-    sortedKeys = aDict.keys()
+    sortedKeys = list(aDict.keys())
     sortedKeys.sort()
     eltList = []
     for aKey in sortedKeys:
@@ -348,10 +348,10 @@ def splitDMSStr (dmsStr):
     error conditions:
         raises ValueError if the string cannot be parsed
     """
-    assert isinstance(dmsStr, basestring)
+    assert isinstance(dmsStr, str)
     m = _DegRE.match(dmsStr) or _DegMinRE.match(dmsStr) or _DegMinSecRE.match(dmsStr)
     if m == None:
-        raise ValueError, "splitDMSStr cannot parse %s as a sexagesimal string" % (dmsStr)
+        raise ValueError("splitDMSStr cannot parse %s as a sexagesimal string" % (dmsStr))
     matchSet = list(m.groups())
     if matchSet[-1] == None:
         matchSet[-1] = ''
@@ -374,7 +374,7 @@ def floatFromStr(astr, allowExp=1):
     
     
     if match == None:
-        raise ValueError, "cannot convert :%s: to a float" % (astr)
+        raise ValueError("cannot convert :%s: to a float" % (astr))
         
     try:
         return float(astr)
@@ -391,7 +391,7 @@ def intFromStr(astr):
         raises ValueError if astr cannot be converted
     """
     if _IntRE.match(astr) == None:
-        raise ValueError, "cannot convert :%s: to an integer" % (astr)
+        raise ValueError("cannot convert :%s: to an integer" % (astr))
 
     try:
         return int(astr)
@@ -433,7 +433,7 @@ def strFromException(exc):
         return str(exc)
     except Exception:
         try:
-            return ",".join([unicode(s) for s in exc.args])
+            return ",".join([str(s) for s in exc.args])
         except Exception:
             # in case exc is some unexpected type
             return repr(exc)
@@ -564,18 +564,18 @@ def _assertTest():
             locAssert("%r", dmsStr02[1], dmsStrFromDeg, degVal, 3, 1)
             locAssert("%r", dmsStr02[2], dmsStrFromDeg, degVal, 3, 2)
             if not isOK:
-                print "unexpected success on %r" % testStr
+                print("unexpected success on %r" % testStr)
                 nErrors += 1
-        except StandardError, e:
+        except Exception as e:
             if isOK:
                 raise
-                print "unexpected failure on %r\n\t%s\nskipping other tests on this value" % (testStr, e)
+                print("unexpected failure on %r\n\t%s\nskipping other tests on this value" % (testStr, e))
                 nErrors += 1
     
     if nErrors == 0:
-        print "RO.StringUtil passed"
+        print("RO.StringUtil passed")
     else:
-        print "RO.StringUtil failed with %d errors" % nErrors
+        print("RO.StringUtil failed with %d errors" % nErrors)
             
 
 def _printTest(dmsSet = None):
@@ -586,7 +586,7 @@ def _printTest(dmsSet = None):
     The output is in the format used by _assertTest, but please use this with great caution.
     You must examine the output very carefully to confirm it is correct before updating _assertTest!
     """
-    print "Exercising RO string utilities"
+    print("Exercising RO string utilities")
     if not dmsSet:
         dmsSet = (
             ("::", ""),
@@ -627,11 +627,11 @@ def _printTest(dmsSet = None):
                 outDMSStr = []
                 for prec in range(3):
                     outDMSStr.append(dmsStrFromDeg(deg, precision=prec))
-                print "[%r, %r, True, %r, %r, %r, %r, %r]," % (testStr, commentStr, itemList, deg, sec, neatStr, outDMSStr)
-            except StandardError, e:
-                print "unexpected failure on %r (%s); error = %s" % (testStr, commentStr, e)
+                print("[%r, %r, True, %r, %r, %r, %r, %r]," % (testStr, commentStr, itemList, deg, sec, neatStr, outDMSStr))
+            except Exception as e:
+                print("unexpected failure on %r (%s); error = %s" % (testStr, commentStr, e))
         else:
-            print "[%r, %r, False, %r, %r, %r, %r, %r]," % tuple([testStr, commentStr] + [None]*5)
+            print("[%r, %r, False, %r, %r, %r, %r, %r]," % tuple([testStr, commentStr] + [None]*5))
 
 if __name__ == "__main__":
     doPrint = False

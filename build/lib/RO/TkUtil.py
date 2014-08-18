@@ -26,7 +26,7 @@ __all__ = ['addColors', 'colorOK', 'EvtNoProp', 'getWindowingSystem', 'getTclVer
 import re
 import sys
 import traceback
-import Tkinter
+import tkinter
 import RO.OS
 
 # windowing system constants
@@ -64,7 +64,7 @@ def colorOK(colorStr):
 
     try:
         tkWdg.winfo_rgb(colorStr)
-    except Tkinter.TclError:
+    except tkinter.TclError:
         return False
     return True
 
@@ -124,7 +124,7 @@ def getWindowingSystem():
         tkWdg = _getTkWdg()
         try:
             g_winSys = tkWdg.tk.call("tk", "windowingsystem")
-        except Tkinter.TclError:
+        except tkinter.TclError:
             # windowingsystem not supported; take a best guess
             if RO.OS.PlatformName == "win":
                 g_winSys = "win32"
@@ -192,13 +192,13 @@ class TclFunc:
         except AttributeError:
             pass
         if self.debug:
-            print "registering tcl function %s for python function %s" % (self.tclFuncName, func)
+            print("registering tcl function %s for python function %s" % (self.tclFuncName, func))
         self.tkApp.createcommand(self.tclFuncName, self)
     
     def __call__(self, *args):
         try:
             self.func(*args)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write("tcl function %s failed: %s\n" % (self.tclFuncName, e))
             traceback.print_exc(file=sys.stderr)
         
@@ -207,16 +207,16 @@ class TclFunc:
         Safe to call if already deregistered.
         """
         if self.debug:
-            print "%r.deregister()" % (self,)
+            print("%r.deregister()" % (self,))
         if not self.func:
             if self.debug:
-                print "already deregistered"
+                print("already deregistered")
             return
         try:
             self.tkApp.deletecommand(self.tclFuncName)
-        except Tkinter.TclError, e:
+        except tkinter.TclError as e:
             if self.debug:
-                print "deregistering failed: %r" % (e,)
+                print("deregistering failed: %r" % (e,))
             pass
         self.func = None
     
@@ -476,11 +476,11 @@ def _getTkWdg():
     """Return a Tk widget"""
     global g_tkWdg
     if not g_tkWdg:
-        g_tkWdg = Tkinter.Frame()
+        g_tkWdg = tkinter.Frame()
     return g_tkWdg
 
 if __name__ == "__main__":
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
 
     def setGeometry(geomStrList):
         if not geomStrList:
@@ -489,7 +489,7 @@ if __name__ == "__main__":
         geomStr = geomStrList.pop()
         geomObj = Geometry.fromTkStr(geomStr)
         constrainedGeom = geomObj.constrained()
-        print "geomStr=%s; constrainedGeomStr=%s" % (geomStr, constrainedGeom)
+        print("geomStr=%s; constrainedGeomStr=%s" % (geomStr, constrainedGeom))
         root.geometry(constrainedGeom.toTkStr())
         root.after(2000, setGeometry, geomStrList)
         

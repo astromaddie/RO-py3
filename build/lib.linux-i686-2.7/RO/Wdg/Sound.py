@@ -17,7 +17,7 @@ __all__ = ['bell', 'BellPlay', 'SoundPlayer', 'NoPlay']
 
 import os
 import sys
-import Tkinter
+import tkinter
 import RO.StringUtil
 try:
     import pygame.mixer
@@ -42,7 +42,7 @@ def bell(num=1, delay=100):
     """
     global _TkWdg
     if not _TkWdg:
-        _TkWdg = Tkinter.Frame()
+        _TkWdg = tkinter.Frame()
     _TkWdg.bell()
     if num > 1:
         _TkWdg.after(int(delay), bell, int(num)-1, int(delay))
@@ -99,7 +99,7 @@ class SoundPlayer(object):
             try:
                 pygame.mixer.init()
                 _PyGameReady = True
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("Could not initialize pygame for sound: %s\n" % \
                     (RO.StringUtil.strFromException(e),))
                 _PyGameAvail = False
@@ -114,7 +114,7 @@ class SoundPlayer(object):
             if _PyGameReady:
                 try:
                     self._snd = pygame.mixer.Sound(fileName)
-                except Exception, e:
+                except Exception as e:
                     sys.stderr.write("Could not load sound file %r; using beep instead: %s\n" % \
                         (fileName, RO.StringUtil.strFromException(e),))
         

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from SCFromCC import *
+from .SCFromCC import *
 
 def scFromDC (p):
     """Convert direction cosines or any cartesian vector to spherical coordinates.
@@ -29,7 +29,7 @@ def scFromDC (p):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing scFromDC"
+    print("testing scFromDC")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -48,6 +48,6 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-14):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

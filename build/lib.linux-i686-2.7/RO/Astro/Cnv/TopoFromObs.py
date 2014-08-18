@@ -67,8 +67,7 @@ def topoFromObs (obsP, refCo):
     if rxysq * RO.SysConst.FAccuracy <= RO.SysConst.FSmallNum:
         if rmag * RO.SysConst.FAccuracy <= RO.SysConst.FSmallNum:
             #  |R| is too small to use -- probably a bug in the calling software
-            raise ValueError, \
-                'obsP %r too small' % obsP 
+            raise ValueError('obsP %r too small' % obsP) 
         #  at zenith; set output = input
         appTopoP = numpy.array(obsP, copy=True, dtype=float)
     else:
@@ -112,7 +111,7 @@ def topoFromObs (obsP, refCo):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing topoFromObs"
+    print("testing topoFromObs")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -144,6 +143,6 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-14):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

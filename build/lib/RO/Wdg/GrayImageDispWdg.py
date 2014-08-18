@@ -164,7 +164,7 @@ History:
 2013-09-05 ROwen    Change "import Image" to "from PIL import Image" for compatibility with Pillow.
 """
 import weakref
-import Tkinter
+import tkinter
 import math
 import numpy
 try:
@@ -180,10 +180,10 @@ import RO.CanvasUtil
 import RO.Constants
 import RO.SeqUtil
 import RO.TkUtil
-import Entry
-import Label
-import OptionMenu
-import RadiobuttonSet
+from . import Entry
+from . import Label
+from . import OptionMenu
+from . import RadiobuttonSet
 
 _AnnTag = "_gs_ann_"
 _DragRectTag = "_gs_dragRect"
@@ -223,7 +223,7 @@ def getBitmapDict():
         _ModeZoom: "magnifier",
     }
     retDict = {}
-    for mode, bitmapName in modeDict.iteritems():
+    for mode, bitmapName in modeDict.items():
         retDict[mode] = "@%s.xbm" % os.path.join(bitmapDir, bitmapName)
     return retDict
 
@@ -262,7 +262,7 @@ class MaskInfo(object):
         self.wdg = None
 
         if not self.tkWdg:
-            self.tkWdg = Tkinter.Frame()
+            self.tkWdg = tkinter.Frame()
 
         self.setColor(color)
     
@@ -404,7 +404,7 @@ class Annotation(object):
         """
         self.gim.cnv.delete(self.idTag)
             
-class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
+class GrayImageWdg(tkinter.Frame, RO.AddCallback.BaseMixin):
     """Display a grayscale image.
     
     Inputs:
@@ -430,7 +430,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         callFunc = None,
         defRange = "99.9%",
     **kargs):
-        Tkinter.Frame.__init__(self, master, **kargs)
+        tkinter.Frame.__init__(self, master, **kargs)
         RO.AddCallback.BaseMixin.__init__(self)
         if defRange not in self._RangeMenuItems:
             raise RuntimeError("invalid defRange")
@@ -487,7 +487,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         self._memDebugDict = {}
         
         # tool bar
-        toolFrame = Tkinter.Frame(self)
+        toolFrame = tkinter.Frame(self)
 
         self.scaleMenuWdg = OptionMenu.OptionMenu(
             master = toolFrame,
@@ -565,7 +565,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         self.toolFrame = toolFrame
     
         # add current position and current value widgets
-        posFrame = Tkinter.Frame(self)
+        posFrame = tkinter.Frame(self)
         Label.StrLabel(
             posFrame,
             text = " Cursor Pos: ",
@@ -620,13 +620,13 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         posFrame.pack(side="bottom", anchor="nw")
         
         # set up scrolling panel to display canvas and error messages
-        self.scrollFrame = Tkinter.Frame(self, height=height, width=width) #, borderwidth=2, relief="sunken")
+        self.scrollFrame = tkinter.Frame(self, height=height, width=width) #, borderwidth=2, relief="sunken")
         self.scrollFrame.grid_propagate(False)
         self.strMsgWdg = Label.StrLabel(self.scrollFrame)
         self.strMsgWdg.grid(row=0, column=0)
         self.strMsgWdg.grid_remove()
         
-        self.hsb = Tkinter.Scrollbar(
+        self.hsb = tkinter.Scrollbar(
             self.scrollFrame,
             orient="horizontal",
             width = 10,
@@ -636,7 +636,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         self._hscrollbar = self.hsb
         self.hsb.set(0.0, 1.0)
         
-        self.vsb = Tkinter.Scrollbar(
+        self.vsb = tkinter.Scrollbar(
             self.scrollFrame,
             orient="vertical",
             width = 10,
@@ -645,7 +645,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         self.vsb.grid(row=0, column=1, sticky="ns")
         self.vsb.set(0.0, 1.0)
 
-        self.cnv = Tkinter.Canvas(
+        self.cnv = tkinter.Canvas(
             master = self.scrollFrame,
 #           cursor="tcross",
             bd = 0,
@@ -890,7 +890,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         currScroll = numpy.asarray(sbWdg.get())
         visFrac = currScroll[1] - currScroll[0]
         if visFrac > 1.0:
-            print "doScrollBar warning: visFrac = %r >1" % (visFrac,)
+            print("doScrollBar warning: visFrac = %r >1" % (visFrac,))
             
         
         if scrollCmd == "scroll":
@@ -900,7 +900,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
             desMin = float(scrollAmt)
             newScroll = currScroll + (desMin - currScroll[0])
         else:
-            print "doScrollBar error: unknown scroll command=%r" % (scrollCmd,)
+            print("doScrollBar error: unknown scroll command=%r" % (scrollCmd,))
             return
 
         #print "currScroll=%r, newScroll=%r" % (currScroll, newScroll)
@@ -1143,7 +1143,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
             self.applyRange(redisplay=False)
             
             # display annotations
-            for ann in self.annDict.itervalues():
+            for ann in self.annDict.values():
                 ann.draw()
         except MemoryError:
             self.showMsg("Insufficient Memory!", severity=RO.Constants.sevError)
@@ -1154,7 +1154,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
         """Remove all annotations (if any) with the specified tag.
         """
         newDict = {}
-        for tags, ann in self.annDict.iteritems():
+        for tags, ann in self.annDict.items():
             if tag in tags:
                 ann.delete()
             else:
@@ -1330,7 +1330,7 @@ class GrayImageWdg(Tkinter.Frame, RO.AddCallback.BaseMixin):
             return
         objID = id(obj)
         def refGone(ref=None, objID=objID, objName=objName):
-            print "GrayImage deleting %s" % (objName,)
+            print("GrayImage deleting %s" % (objName,))
             del(self._memDebugDict[objID])
 
         self._memDebugDict[objID] = weakref.ref(obj, refGone)
@@ -1499,8 +1499,8 @@ def limitZoomFac(desZoomFac):
 if __name__ == "__main__":
     import pyfits
     import RO.DS9
-    import PythonTk
-    import StatusBar
+    from . import PythonTk
+    from . import StatusBar
     
     root = PythonTk.PythonTk()
     root.geometry("450x450")

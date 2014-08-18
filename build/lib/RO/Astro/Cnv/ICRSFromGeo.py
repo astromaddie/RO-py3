@@ -81,9 +81,9 @@ def icrsFromGeo (appGeoP, agData):
         maxErr = max (abs (p2 - oldP2))
     # if no convergence, complain and exit
     if (itNum > _MaxIter):
-        raise RuntimeError, 'aberration correction failed to converge;' + \
+        raise RuntimeError('aberration correction failed to converge;' + \
             'after %s iterations; fractional error = %s, max allowed = %s' \
-            % (_MaxIter, maxErr, allowedErr)
+            % (_MaxIter, maxErr, allowedErr))
 
     # here is where the (iterative) correction for sun's gravity belongs
 
@@ -93,8 +93,8 @@ def icrsFromGeo (appGeoP, agData):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    from AppGeoData import AppGeoData
-    print "testing icrsFromGeo"
+    from .AppGeoData import AppGeoData
+    print("testing icrsFromGeo")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -124,8 +124,8 @@ if __name__ == "__main__":
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-9):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
 
 

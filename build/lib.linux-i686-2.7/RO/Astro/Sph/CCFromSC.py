@@ -28,7 +28,7 @@ def ccFromSC (pos, magP):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing ccFromSC"
+    print("testing ccFromSC")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -45,6 +45,6 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = ccFromSC(*testInput)
         if RO.SeqUtil.matchSequences(actualOutput, expectedOutput, rtol=1.0e-14):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

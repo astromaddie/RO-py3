@@ -234,7 +234,7 @@ def _findUnixApp(appName):
             fullErrMsg = "'which %s' failed: %s" % (appName, errMsg)
             raise RuntimeError(fullErrMsg)
         appPath = p.stdout.read()
-        if not appPath.startswith("/"):
+        if not appPath.startswith(b"/"):
             raise RuntimeError("Could not find %s on your PATH" % (appName,))
     finally:
         p.stdout.close()
@@ -314,8 +314,8 @@ def _findDS9AndXPA():
         xpaDir = _findUnixApp("xpaget")
     
     if _DebugSetup:
-        print "_DirFromWhichToRunDS9=%r" % (_DirFromWhichToRunDS9,)
-        print "_DS9Path=%r" % (_DS9Path,)
+        print("_DirFromWhichToRunDS9=%r" % (_DirFromWhichToRunDS9,))
+        print("_DS9Path=%r" % (_DS9Path,))
     
     return (ds9Dir, xpaDir)
     
@@ -340,8 +340,8 @@ def setup(doRaise=False):
     try:
         ds9Dir, xpaDir = _findDS9AndXPA()
         if _DebugSetup:
-            print "ds9Dir=%r\nxpaDir=%r" % (ds9Dir, xpaDir)
-    except Exception, e:
+            print("ds9Dir=%r\nxpaDir=%r" % (ds9Dir, xpaDir))
+    except Exception as e:
         _SetupError = "RO.DS9 unusable: %s" % (e,)
         ds9Dir = xpaDir = None
     
@@ -505,7 +505,7 @@ def _formatOptions(kargs):
     """Returns a string: "key1=val1,key2=val2,..."
     (where keyx and valx are string representations)
     """
-    arglist = ["%s=%s" % keyVal for keyVal in kargs.iteritems()]
+    arglist = ["%s=%s" % keyVal for keyVal in kargs.items()]
     return "%s" % (",".join(arglist))
 
 
@@ -518,7 +518,7 @@ def _splitDict(inDict, keys):
     """
     outDict = {}
     for key in keys:
-        if inDict.has_key(key):
+        if key in inDict:
             outDict[key] = inDict.pop(key)
     return outDict  
 
@@ -649,7 +649,7 @@ class DS9Win:
             dataFunc = arr.tofile,
         )
         
-        for keyValue in kargs.iteritems():
+        for keyValue in kargs.items():
             self.xpaset(cmd=" ".join(keyValue))
 
 # showBinFile is commented out because it is broken with ds9 3.0.3
@@ -698,9 +698,9 @@ class DS9Win:
         # remove array info keywords from kargs; we compute all that
         arrKeys = _splitDict(kargs, _ArrayKeys)
         if arrKeys:
-            raise RuntimeError("Array info not allowed; rejected keywords: %s" % arrKeys.keys())
+            raise RuntimeError("Array info not allowed; rejected keywords: %s" % list(arrKeys.keys()))
         
-        for keyValue in kargs.iteritems():
+        for keyValue in kargs.items():
             self.xpaset(cmd=" ".join(keyValue))
 
     def xpaget(self, cmd):

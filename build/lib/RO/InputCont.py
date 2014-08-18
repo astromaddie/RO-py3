@@ -1,5 +1,5 @@
 #!/usr/bin/env python2
-from __future__ import absolute_import, division
+
 """Containers (wrappers) for RO.Wdg input widgets, including Entry,
 Checkbutton and OptionMenu.
 
@@ -96,6 +96,7 @@ History:
 import itertools
 import RO.AddCallback
 import RO.SeqUtil
+import collections
 
 # formatting functions
 def nullFmt(inputCont):
@@ -154,7 +155,7 @@ class BasicFmt(object):
             valList = [self.valFmt(val) for val in valList]
         if self.rejectBlanks:
             if '' in valList:
-                raise ValueError, 'must specify all values for %r' % (name,)
+                raise ValueError('must specify all values for %r' % (name,))
         
         if self.omitName or name == None:
             nameStr = ''
@@ -201,7 +202,7 @@ class VMSQualFmt(object):
             valList = [self.valFmt(val) for val in valList]
         if self.rejectBlanks:
             if '' in valList:
-                raise ValueError, 'must specify all values for %r' % (name,)
+                raise ValueError('must specify all values for %r' % (name,))
 
         if len(valList) > 1:
             valStr = "(%s)" % ", ".join(valList)
@@ -254,10 +255,10 @@ class BasicContListFmt(object):
 
         if self.rejectBlanks:
             if '' in strList:
-                raise ValueError, 'specify all values for %s' % (name,)
+                raise ValueError('specify all values for %s' % (name,))
 
         if self.omitBlanks:
-            strList = filter(lambda x: x != '', strList)
+            strList = [x for x in strList if x != '']
             if len(strList) == 0:
                 return ''
 
@@ -267,9 +268,9 @@ class BasicContListFmt(object):
             nameStr = name + self.nameSep
         try:
             return self.begStr + nameStr + self.valSep.join(strList) + self.endStr
-        except Exception, e:
-            raise ValueError, 'cannot format name %r with beg/sep/endStr=%r/%r/%r and data=%r; error=%s' % (
-                name, self.begStr, self.valSep, self.endStr, strList, e)
+        except Exception as e:
+            raise ValueError('cannot format name %r with beg/sep/endStr=%r/%r/%r and data=%r; error=%s' % (
+                name, self.begStr, self.valSep, self.endStr, strList, e))
 
 
 # widget containers
@@ -311,8 +312,8 @@ class WdgCont(RO.AddCallback.BaseMixin):
         if formatFunc == None:
             formatFunc = BasicFmt()
         self._formatFunc = formatFunc
-        if not callable(self._formatFunc):
-            raise ValueError, 'format function %r is not callable' % (self._formatFunc,)
+        if not isinstance(self._formatFunc, collections.Callable):
+            raise ValueError('format function %r is not callable' % (self._formatFunc,))
 
         if callFunc:
             self.addCallback(callFunc, callNow)
@@ -470,11 +471,11 @@ class WdgCont(RO.AddCallback.BaseMixin):
         """Set the value of each widget.
         """
         if len(valList) != len(self._wdgList):
-            raise ValueError, 'valList has %d elements; %d needed' % (len(valList), len(self._wdgList))
+            raise ValueError('valList has %d elements; %d needed' % (len(valList), len(self._wdgList)))
         
         # we want just one callback instead of one per container, so disable callbacks until finished
         with self._disableCallbacksContext():
-            for wdg, val in itertools.izip(self._wdgList, valList):
+            for wdg, val in zip(self._wdgList, valList):
                 wdg.set(val)
         self._doCallbacks()
 
@@ -536,17 +537,17 @@ class BoolNegCont(WdgCont):
         else:
             wdgNames = RO.SeqUtil.asList(wdgNames)
             if len(wdgNames) != len(self._wdgList):
-                raise ValueError, 'wdgNames has %d elements; %d needed' % (len(wdgNames), len(self._wdgList))
+                raise ValueError('wdgNames has %d elements; %d needed' % (len(wdgNames), len(self._wdgList)))
         self._wdgNames = wdgNames
 
         # verify that the names are OK      
         lowerNegStr = self._negStr.lower()
         for name in self._wdgNames:
             if name.lower().startswith(lowerNegStr):
-                raise ValueError, 'invalid widget name %r; cannot start with negStr=%r' % (name, self._negStr)
+                raise ValueError('invalid widget name %r; cannot start with negStr=%r' % (name, self._negStr))
         
         # generate widget dict and widget name getter
-        self._wdgDict = RO.Alg.OrderedDict(zip(self._wdgNames, self._wdgList))
+        self._wdgDict = RO.Alg.OrderedDict(list(zip(self._wdgNames, self._wdgList)))
         self._wdgNameGetter = RO.Alg.MatchList(wdgNames, abbrevOK=True, ignoreCase=True)
     
     def getDefValueList(self):
@@ -557,7 +558,7 @@ class BoolNegCont(WdgCont):
                 return name
             else:
                 return self._negStr + name
-        return [fmtFunc(name, wdg) for name, wdg in self._wdgDict.iteritems()]
+        return [fmtFunc(name, wdg) for name, wdg in self._wdgDict.items()]
 
     def getValueList(self, omitDef=None):
         """Get the value as a list: [name1, negStr + name2, ...].
@@ -574,10 +575,10 @@ class BoolNegCont(WdgCont):
             else:
                 return self._negStr + name
         if omitDef:
-            return [fmtFunc(name, wdg) for name, wdg in self._wdgDict.iteritems() \
+            return [fmtFunc(name, wdg) for name, wdg in self._wdgDict.items() \
                 if wdg.getDefault() != wdg.getString()]
         else:
-            return [fmtFunc(name, wdg) for name, wdg in self._wdgDict.iteritems()]
+            return [fmtFunc(name, wdg) for name, wdg in self._wdgDict.items()]
     
     def getWdgByName(self, name):
         """Return a widget given its name.
@@ -662,17 +663,17 @@ class BoolOmitCont(WdgCont):
         else:
             wdgNames = RO.SeqUtil.asList(wdgNames)
             if len(wdgNames) != len(self._wdgList):
-                raise ValueError, 'wdgNames has %d elements; %d needed' % (len(wdgNames), len(self._wdgList))
+                raise ValueError('wdgNames has %d elements; %d needed' % (len(wdgNames), len(self._wdgList)))
         self._wdgNames = wdgNames
 
         # generate widget dict and widget name getter
-        self._wdgDict = RO.Alg.OrderedDict(zip(self._wdgNames, self._wdgList))
+        self._wdgDict = RO.Alg.OrderedDict(list(zip(self._wdgNames, self._wdgList)))
         self._wdgNameGetter = RO.Alg.MatchList(wdgNames, abbrevOK=True, ignoreCase=True)
         
         # verify that all widgets have default=checked
-        for name, wdg in self._wdgDict.iteritems():
+        for name, wdg in self._wdgDict.items():
             if not wdg.getDefBool():
-                raise ValueError, "widget %s does not have default=checked" % (name,)
+                raise ValueError("widget %s does not have default=checked" % (name,))
 
     def getValueList(self, omitDef=None):
         """Get the value as a list: [name1, name3 ...] where only checked values
@@ -684,7 +685,7 @@ class BoolOmitCont(WdgCont):
         """
         if omitDef is None:
             omitDef = self._omitDef
-        valList = [name for name, wdg in self._wdgDict.iteritems()
+        valList = [name for name, wdg in self._wdgDict.items()
             if wdg.getBool()]
         if omitDef and len(valList) == len(self._wdgList):
             return []
@@ -750,7 +751,7 @@ class ContList(WdgCont):
             callNow = callNow,
         )
         if len(RO.SeqUtil.asList(conts)) < 1:
-            raise ValueError, 'must supply at least one input container'
+            raise ValueError('must supply at least one input container')
         self._wdgList = self._wdgList
 
     def allEnabled(self):
@@ -910,7 +911,7 @@ class ContList(WdgCont):
 
 
 if __name__ == "__main__":
-    import Tkinter
+    import tkinter
     import RO.Wdg
     root = RO.Wdg.PythonTk()
     
@@ -922,42 +923,42 @@ if __name__ == "__main__":
 
     def printOptions():
         valDict = cList.getValueDict()
-        print 'dict:', valDict
+        print('dict:', valDict)
         try:
             fmtStr = cList.getString()
-        except Exception, e:
-            print 'no string, error=', e
+        except Exception as e:
+            print('no string, error=', e)
         else:
-            print 'string:', fmtStr
+            print('string:', fmtStr)
         
     def printCallback(modWdg):
-        print 'modified container', modWdg.getName()
+        print('modified container', modWdg.getName())
         try:
             valDict = cList.getValueDict()
-            print 'new dict:', valDict
-        except ValueError, e:
-            print e
+            print('new dict:', valDict)
+        except ValueError as e:
+            print(e)
         
     def setEnable(*args):
         doEnable = enableVar.get()
         cList.setEnable(doEnable)
     
-    hideVar = Tkinter.IntVar()
+    hideVar = tkinter.IntVar()
     hideVar.set(False)
     hideVar.trace_variable('w', doHide)
-    hideButton = Tkinter.Checkbutton (root, variable=hideVar, text='hide')
+    hideButton = tkinter.Checkbutton (root, variable=hideVar, text='hide')
     hideButton.pack()
     
-    enableVar = Tkinter.IntVar()
+    enableVar = tkinter.IntVar()
     enableVar.set(1)
     enableVar.trace_variable('w', setEnable)
-    enableButton = Tkinter.Checkbutton (root, variable=enableVar, text='Enable')
+    enableButton = tkinter.Checkbutton (root, variable=enableVar, text='Enable')
     enableButton.pack()
     
-    getButton = Tkinter.Button (root, command=printOptions, text='Print Options')
+    getButton = tkinter.Button (root, command=printOptions, text='Print Options')
     getButton.pack()
     
-    wdgFrame = Tkinter.Frame(root)
+    wdgFrame = tkinter.Frame(root)
     
     conts = (
         WdgCont (
@@ -991,10 +992,10 @@ if __name__ == "__main__":
         callFunc = printCallback,
     )
     
-    clearButton = Tkinter.Button (root, command=cList.clear, text='Clear')
+    clearButton = tkinter.Button (root, command=cList.clear, text='Clear')
     clearButton.pack()
     
-    defButton = Tkinter.Button (root, command=cList.restoreDefault, text='Default')
+    defButton = tkinter.Button (root, command=cList.restoreDefault, text='Default')
     defButton.pack()
     
     flatWdgList = cList.getWdgList()

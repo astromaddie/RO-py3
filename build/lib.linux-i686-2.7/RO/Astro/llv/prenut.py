@@ -6,9 +6,9 @@ P.T.Wallace Starlink    April 1987
 2007-04-24 ROwen    Converted from Numeric to numpy.
 """
 import numpy
-from prec import prec
-from nut import nut
-from epj import epj
+from .prec import prec
+from .nut import nut
+from .epj import epj
 
 def prenut (epoch, mjd):
     """
@@ -35,7 +35,7 @@ def prenut (epoch, mjd):
 
 
 if __name__ == "__main__":
-    print "testing prenut"
+    print("testing prenut")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument for nut
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = prenut(*testInput)
         if not numpy.allclose(actualOutput, expectedOutput, rtol=1e-15, atol=1e-15):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
 

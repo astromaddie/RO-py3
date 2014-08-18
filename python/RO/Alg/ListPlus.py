@@ -5,7 +5,7 @@ History:
 2003-03-13 ROwen    First release
 2005-06-03 ROwen    Fixed indentation quirks (needless spaces before tabs)
 """
-from __future__ import generators
+
 
 class ListPlus (list):
     def get(self, key, defValue = None):
@@ -22,17 +22,17 @@ class ListPlus (list):
             return False
     
     def iteritems(self):
-        for key in self.iterkeys():
+        for key in list(self.keys()):
             yield (key, self[key])
 
     def iterkeys(self):
-        return iter(xrange(len(self)))
+        return iter(list(range(len(self))))
 
     def itervalues(self):
         return iter(self)
 
     def keys(self):
-        return range(len(self))
+        return list(range(len(self)))
     
     def values(self):
         return self[:]

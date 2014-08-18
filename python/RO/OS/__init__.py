@@ -3,5 +3,5 @@
   and searching for lists of files that match a particular criteria.
 - Etilties for finding the user's preferences file folder and such.
 """
-from OSUtil import *
-from getDirs import *
+from .OSUtil import *
+from .getDirs import *

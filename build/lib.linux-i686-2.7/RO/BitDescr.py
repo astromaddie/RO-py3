@@ -27,6 +27,6 @@ if __name__ == "__main__":
         (0, "Bit 0"),
     )
     
-    print "starting test"
+    print("starting test")
     for i in range(17):
-        print i, getDescr(bitInfo, i)
+        print(i, getDescr(bitInfo, i))

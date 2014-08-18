@@ -9,7 +9,7 @@ History:
 import numpy
 import RO.MathUtil
 from RO.Astro import llv
-from HADecFromAzAlt import *
+from .HADecFromAzAlt import *
 
 def geoFromTopo (appTopoP, last, obsData):
     """
@@ -61,8 +61,8 @@ def geoFromTopo (appTopoP, last, obsData):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    from ObserverData import ObserverData
-    print "testing geoFromTopo"
+    from .ObserverData import ObserverData
+    print("testing geoFromTopo")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -91,6 +91,6 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = geoFromTopo(*testInput)
         if RO.SeqUtil.matchSequences(actualOutput, expectedOutput, rtol=1.0e-10):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

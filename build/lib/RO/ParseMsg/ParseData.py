@@ -8,8 +8,8 @@ History:
                     Added "noValKey=" to test cases as it caused an infinite loop.
 2004-05-18 ROwen    Modified test code to use astr instead of str.
 """
-from GetKeyword import getKeyword
-from GetValues import getValues
+from .GetKeyword import getKeyword
+from .GetValues import getValues
 import RO.Alg
 
 def parseKeyValueData(astr):
@@ -54,7 +54,7 @@ def parseKeyValueData(astr):
 
 if __name__ == '__main__':
     # perform test
-    print "testing parseHubMsg\n"
+    print("testing parseHubMsg\n")
     testList = [
         "keyword",
         "",
@@ -67,9 +67,9 @@ if __name__ == '__main__':
     for astr in testList:
         try:
             dataDict = parseKeyValueData(astr)
-            print "parseHubMsg(%r) = {" % (astr,)
-            for key, value in dataDict.iteritems():
-                print "    %r: %r" % (key, value)
-            print "}"
-        except StandardError, e:
-            print "failed with error: ", e
+            print("parseHubMsg(%r) = {" % (astr,))
+            for key, value in dataDict.items():
+                print("    %r: %r" % (key, value))
+            print("}")
+        except Exception as e:
+            print("failed with error: ", e)

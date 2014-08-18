@@ -92,9 +92,9 @@ def checkRange(value, minValue, maxValue, valDescr="value"):
     if value == None:
         return
     if maxValue != None and value > maxValue:
-        raise ValueError, "%s too large: %r > %r" % (valDescr, value, maxValue)
+        raise ValueError("%s too large: %r > %r" % (valDescr, value, maxValue))
     if minValue != None and value < minValue:
-        raise ValueError, "%s too small: %r < %r" % (valDescr, value, minValue)
+        raise ValueError("%s too small: %r < %r" % (valDescr, value, minValue))
 
 #The following were commented out 2001-01-10 because inf and nan
 #are not handled on Mac OS X (Python 2.2 from fink).

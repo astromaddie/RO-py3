@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+
 
 import RO.MathUtil
 from .GMSTFromUT1 import gmstFromUT1

@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+
 from RO.Astro import llv
 
 __all__ = ["mjdFromEpJ"]

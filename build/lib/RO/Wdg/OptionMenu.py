@@ -104,13 +104,13 @@ History:
 """
 __all__ = ['OptionMenu']
 
-import Tkinter
+import tkinter
 import RO.AddCallback
 import RO.Alg
 import RO.SeqUtil
-from IsCurrentMixin import AutoIsCurrentMixin, IsCurrentActiveMixin
-from SeverityMixin import SeverityActiveMixin
-from Menubutton import Menubutton
+from .IsCurrentMixin import AutoIsCurrentMixin, IsCurrentActiveMixin
+from .SeverityMixin import SeverityActiveMixin
+from .Menubutton import Menubutton
 
 class _DoItem:
     def __init__(self, var, value):
@@ -187,7 +187,7 @@ class OptionMenu(Menubutton, RO.AddCallback.TkVarMixin,
     **kargs):
         showDefault = not (var and defValue == None)
         if var == None:
-            var = Tkinter.StringVar()
+            var = tkinter.StringVar()
         self._tempValue = None
         self._items = []
         self.defValue = None
@@ -221,7 +221,7 @@ class OptionMenu(Menubutton, RO.AddCallback.TkVarMixin,
             wdgKArgs["textvariable"] = var
         self.label = label
         Menubutton.__init__(self, master = master, helpURL = helpURL, **wdgKArgs)
-        self._menu = Tkinter.Menu(self, tearoff = False, postcommand = postCommand)
+        self._menu = tkinter.Menu(self, tearoff = False, postcommand = postCommand)
         self["menu"] = self._menu
 
         RO.AddCallback.TkVarMixin.__init__(self, var)
@@ -483,8 +483,8 @@ class OptionMenu(Menubutton, RO.AddCallback.TkVarMixin,
             nItems = len(items)
             self._fixedHelpText = None
             if len(helpText) != nItems:
-                raise ValueError, "helpText list has %d entries but %d wanted" % \
-                    (len(helpText), nItems)
+                raise ValueError("helpText list has %d entries but %d wanted" % \
+                    (len(helpText), nItems))
             for ii in range(nItems):
                 self._helpTextDict[items[ii]] = helpText[ii]
         else:
@@ -541,9 +541,9 @@ class OptionMenu(Menubutton, RO.AddCallback.TkVarMixin,
 
 
 if __name__ == "__main__":
-    import Label
-    import PythonTk
-    import StatusBar
+    from . import Label
+    from . import PythonTk
+    from . import StatusBar
     root = PythonTk.PythonTk()
     
     def callFunc(wdg):

@@ -148,6 +148,7 @@ import sys
 import traceback
 import RO.OS
 import RO.SeqUtil
+import collections
 
 def procFiles (
     func,
@@ -158,8 +159,8 @@ def procFiles (
     recursionDepth = None,
 ):
     # make sure func is callable
-    if not callable(func):
-        raise RuntimeError, "supplied function is not callable"
+    if not isinstance(func, collections.Callable):
+        raise RuntimeError("supplied function is not callable")
 
     # handle case of inPathList being a single string
     inPathList = RO.SeqUtil.asSequence(inPathList)
@@ -190,7 +191,7 @@ def procFiles (
     # check outDir or fill in default
     if outDir:
         if not os.path.exists(outDir):
-            raise RuntimeError, "directory %r does not exist" % (outDir,)
+            raise RuntimeError("directory %r does not exist" % (outDir,))
     else:
         outDir = os.curdir
     
@@ -210,7 +211,7 @@ def procFiles (
             sys.stdout = file(outPath, 'w')
         except ImportError:
             # unknown platform; use standard prompt
-            outFile = raw_input(
+            outFile = input(
                 "output file relative to %r [stdout]: " % outDir)
 
             # generate outPath, and if it's a file, open it and redirect stdout
@@ -250,7 +251,7 @@ def procFiles (
                 sys.stderr.write ("Aborted during file %r\n" % (inPath,))
                 break
             
-            except RuntimeError, err:
+            except RuntimeError as err:
                 sys.stderr.write ("Failed on file %r with error: %s\n" % (inPath, err))
     
             except Exception:
@@ -281,7 +282,7 @@ def testFunc (fName, isFirst=False, isLast=False, outPath=""):
         (fName, outPath, isFirst, isLast))
 
     if isFirst:
-        print "***** Beginning of all files *****\n"
+        print("***** Beginning of all files *****\n")
 
     # echo line of file
     while True:
@@ -291,7 +292,7 @@ def testFunc (fName, isFirst=False, isLast=False, outPath=""):
         sys.stdout.write(data)
 
     if isLast:
-        print "***** End of all files *****\n"
+        print("***** End of all files *****\n")
 
 if __name__ == '__main__':
     # test self on self

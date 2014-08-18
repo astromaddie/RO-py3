@@ -143,9 +143,9 @@ def getPrefsDirs(inclNone = False):
 
 
 if __name__ == "__main__":
-    print "Testing"
+    print("Testing")
     for inclNone in (False, True):
-        print 'getAppDirs(%s)     = %r' % (inclNone, getAppDirs(inclNone))
-        print 'getAppSuppDirs(%s) = %r' % (inclNone, getAppSuppDirs(inclNone))
-        print 'getPrefsDirs(%s)   = %r' % (inclNone, getPrefsDirs(inclNone))
-    print 'getDocsDir()         = %r' % getDocsDir()
+        print('getAppDirs(%s)     = %r' % (inclNone, getAppDirs(inclNone)))
+        print('getAppSuppDirs(%s) = %r' % (inclNone, getAppSuppDirs(inclNone)))
+        print('getPrefsDirs(%s)   = %r' % (inclNone, getPrefsDirs(inclNone)))
+    print('getDocsDir()         = %r' % getDocsDir())

@@ -66,7 +66,7 @@ except Exception:
 import os.path
 import sys
 import traceback
-import Tkinter
+import tkinter
 import RO.CnvUtil
 import RO.OS
 import RO.SeqUtil
@@ -78,7 +78,7 @@ tl_CloseDestroys = 0
 tl_CloseWithdraws = 1
 tl_CloseDisabled = 2
 
-class Toplevel(Tkinter.Toplevel):
+class Toplevel(tkinter.Toplevel):
     def __init__(self,
         master=None,
         geometry="",
@@ -120,7 +120,7 @@ class Toplevel(Tkinter.Toplevel):
         An alternative solution is to create a variant of GenericCallback that
         is specialized for Tk widgets or at least puts unnamed dynamic arguments first.
         """
-        Tkinter.Toplevel.__init__(self, master)
+        tkinter.Toplevel.__init__(self, master)
         self.wm_withdraw()
         
         resizable = RO.SeqUtil.oneOrNAsList(resizable, 2, valDescr = "resizable")
@@ -156,7 +156,7 @@ class Toplevel(Tkinter.Toplevel):
             try:
                 self.__wdg = wdgFunc(self)
                 self.__wdg.pack(expand="yes", fill="both")
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("Could not create window %r: %s\n" % (title, RO.StringUtil.strFromException(e)))
                 traceback.print_exc(file=sys.stderr)
                 raise
@@ -328,11 +328,11 @@ class Toplevel(Tkinter.Toplevel):
     
     def __printInfo(self):
         """A debugging tool prints info to the main window"""
-        print "info for RO.Wdg.Toplevel %s" % self.wm_title()
-        print "getGeometry = %r" % (self.getGeometry(),)
-        print "geometry = %r" % (self.geometry())
-        print "width, height = %r, %r" % (self.winfo_width(), self.winfo_height())
-        print "req width, req height = %r, %r" % (self.winfo_reqwidth(), self.winfo_reqheight())
+        print("info for RO.Wdg.Toplevel %s" % self.wm_title())
+        print("getGeometry = %r" % (self.getGeometry(),))
+        print("geometry = %r" % (self.geometry()))
+        print("width, height = %r, %r" % (self.winfo_width(), self.winfo_height()))
+        print("req width, req height = %r, %r" % (self.winfo_reqwidth(), self.winfo_reqheight()))
 
     def __str__(self):
         return "Toplevel(%s)" % (self.wm_title(),)
@@ -375,7 +375,7 @@ class ToplevelSet(object):
         self.defGeomDict = {}
         self.defVisDict = {}
         if defGeomVisDict:
-            for name, geomVis in defGeomVisDict.iteritems():
+            for name, geomVis in defGeomVisDict.items():
                 geom, vis = geomVis
                 if geom:
                     self.defGeomDict[name] = geom
@@ -393,7 +393,7 @@ class ToplevelSet(object):
         """Adds a new Toplevel instance to the set.
         """
         if self.getToplevel(name):
-            raise RuntimeError, "toplevel %r already exists" % (name,)
+            raise RuntimeError("toplevel %r already exists" % (name,))
         self.tlDict[name] = toplevel
     
     def createToplevel(self, 
@@ -423,7 +423,7 @@ class ToplevelSet(object):
         Return the new Toplevel
         """
         if self.getToplevel(name):
-            raise RuntimeError, "toplevel %r already exists" % (name,)
+            raise RuntimeError("toplevel %r already exists" % (name,))
         if defGeom:
             self.defGeomDict[name] = defGeom
         if defVisible == None:
@@ -495,7 +495,7 @@ class ToplevelSet(object):
         
         The list includes toplevels that have been destroyed.
         """
-        nameList = self.tlDict.keys()
+        nameList = list(self.tlDict.keys())
         nameList.sort()
         if not prefix:
             return nameList
@@ -506,7 +506,7 @@ class ToplevelSet(object):
         (or all names if prefix omitted). The names are in alphabetical order
         (though someday that may change to the order in which windows are added).
         """
-        nameList = sorted(self.fileGeomDict.iterkeys())
+        nameList = sorted(self.fileGeomDict.keys())
         if not prefix:
             return nameList
         return [name for name in nameList if name.startswith(prefix)]
@@ -514,7 +514,7 @@ class ToplevelSet(object):
     def makeVisible(self, name):
         tl = self.getToplevel(name)
         if not tl:
-            raise RuntimeError, "No such window %r" % (name,)
+            raise RuntimeError("No such window %r" % (name,))
         tl.makeVisible()
     
     def readGeomVisFile(self, fileName=None, doCreate=False):
@@ -534,14 +534,14 @@ class ToplevelSet(object):
         """
         fileName = fileName or self.defFileName
         if not fileName:
-            raise RuntimeError, "No geometry file specified and no default"
+            raise RuntimeError("No geometry file specified and no default")
         
         if not os.path.isfile(fileName):
             if doCreate:
                 try:
                     outFile = open(fileName, "w")
                     outFile.close()
-                except StandardError, e:
+                except Exception as e:
                     sys.stderr.write ("Could not create geometry file %r; error: %s\n" % (fileName, RO.StringUtil.strFromException(e)))
                 sys.stderr.write ("Created blank geometry file %r\n" % (fileName,))
             else:
@@ -550,8 +550,8 @@ class ToplevelSet(object):
 
         try:
             inFile = RO.OS.openUniv(fileName)
-        except StandardError, e:
-            raise RuntimeError, "Could not open geometry file %r; error: %s\n" % (fileName, RO.StringUtil.strFromException(e))
+        except Exception as e:
+            raise RuntimeError("Could not open geometry file %r; error: %s\n" % (fileName, RO.StringUtil.strFromException(e)))
             
         newGeomDict = {}
         newVisDict = {}
@@ -589,7 +589,7 @@ class ToplevelSet(object):
                         try:
                             stateDict = json.loads(stateDictStr)
                             newState[name] = stateDict
-                        except Exception, e:
+                        except Exception as e:
                             sys.stderr.write("Error reading line %d of geometry file %s: %s" % (ind+1, fileName, line))
                             sys.stderr.write("  failed to parse state: %r\n" % (stateDictStr,))
                             sys.stderr.write("  error: %s\n" % (RO.StringUtil.strFromException(e),))
@@ -613,15 +613,15 @@ class ToplevelSet(object):
         """
         fileName = fileName or self.defFileName
         if not fileName:
-            raise RuntimeError, "No geometry file specified and no default"
+            raise RuntimeError("No geometry file specified and no default")
         
         if readFirst and os.path.isfile(fileName):
             self.readGeomVisFile(fileName)
 
         try:
             outFile = open(fileName, "w")
-        except StandardError, e:
-            raise RuntimeError, "Could not open geometry file %r; error: %s\n" % (fileName, RO.StringUtil.strFromException(e))
+        except Exception as e:
+            raise RuntimeError("Could not open geometry file %r; error: %s\n" % (fileName, RO.StringUtil.strFromException(e)))
             
         try:
             names = self.getNames()
@@ -676,17 +676,17 @@ if __name__ == "__main__":
         resizable=(False, True),
         geometry = "40x40+150+50"
     )
-    l = Tkinter.Label(testWin, text="This is a label")
+    l = tkinter.Label(testWin, text="This is a label")
     l.pack()
     
     def printInfo():
-        print "testWin.getGeometry = %r" % (testWin.getGeometry(),)
-        print "geometry = %r" % (testWin.geometry())
-        print "width, height = %r, %r" % (testWin.winfo_width(), testWin.winfo_height())
-        print "req width, req height = %r, %r" % (testWin.winfo_reqwidth(), testWin.winfo_reqheight())
-        print ""
+        print("testWin.getGeometry = %r" % (testWin.getGeometry(),))
+        print("geometry = %r" % (testWin.geometry()))
+        print("width, height = %r, %r" % (testWin.winfo_width(), testWin.winfo_height()))
+        print("req width, req height = %r, %r" % (testWin.winfo_reqwidth(), testWin.winfo_reqheight()))
+        print("")
     
-    b = Tkinter.Button(root, text="Window Info", command=printInfo)
+    b = tkinter.Button(root, text="Window Info", command=printInfo)
     b.pack()
             
     root.mainloop()

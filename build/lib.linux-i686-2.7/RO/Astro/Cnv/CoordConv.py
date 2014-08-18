@@ -28,20 +28,20 @@ History:
 import numpy
 import RO.CoordSys
 from RO.Astro import Tm
-from AppGeoData import *
-from FK4FromICRS import *
-from FK5Prec import *
-from GalFromICRS import *
-from GeoFromICRS import *
-from GeoFromTopo import *
-from ICRSFromFK4 import *
-from ICRSFromFixedFK4 import *
-from ICRSFromGal import *
-from ICRSFromGeo import *
-from ObserverData import *
-from ObsFromTopo import *
-from TopoFromGeo import *
-from TopoFromObs import *
+from .AppGeoData import *
+from .FK4FromICRS import *
+from .FK5Prec import *
+from .GalFromICRS import *
+from .GeoFromICRS import *
+from .GeoFromTopo import *
+from .ICRSFromFK4 import *
+from .ICRSFromFixedFK4 import *
+from .ICRSFromGal import *
+from .ICRSFromGeo import *
+from .ObserverData import *
+from .ObsFromTopo import *
+from .TopoFromGeo import *
+from .TopoFromObs import *
 
 _CSysList = (RO.CoordSys.ICRS, RO.CoordSys.FK5, RO.CoordSys.FK4, RO.CoordSys.Galactic,
     RO.CoordSys.Geocentric, RO.CoordSys.Topocentric, RO.CoordSys.Observed,
@@ -95,7 +95,7 @@ class _CnvObj (object):
             for toSys in _CSysList:
                 if toSys == fromSys:
                     continue
-                if methDict.has_key(toSys):
+                if toSys in methDict:
                     continue
                 funcName = "%sFrom%s" % (toSys, fromSys)
                 if hasattr(_CnvObj, funcName):
@@ -208,7 +208,7 @@ class _CnvObj (object):
     
     def TopocentricFromGeocentric(self, fromP, dumV):
         if self.obsData == None:
-            raise ValueError, "must specify obsData to cnvert to Topocentric from Geocentric"
+            raise ValueError("must specify obsData to cnvert to Topocentric from Geocentric")
         return (
             topoFromGeo(fromP, Tm.lastFromUT1(self.toDate, self.obsData.longitude), self.obsData),
             _CnvObj.ZeroV,
@@ -216,7 +216,7 @@ class _CnvObj (object):
     
     def GeocentricFromTopocentric(self, fromP, dumV):
         if self.obsData == None:
-            raise ValueError, "must specify obsData to convert to Geocentric from Topocentric"
+            raise ValueError("must specify obsData to convert to Geocentric from Topocentric")
         return (
             geoFromTopo(fromP, Tm.lastFromUT1(self.fromDate, self.obsData.longitude), self.obsData),
             _CnvObj.ZeroV,
@@ -224,13 +224,13 @@ class _CnvObj (object):
     
     def ObservedFromTopocentric(self, fromP, dumV):
         if self.refCo == None:
-            raise ValueError, "must specify refCo to convert to Observed from Topocentric"
+            raise ValueError("must specify refCo to convert to Observed from Topocentric")
         pos, tooLow = obsFromTopo(fromP, self.refCo)
         return (pos, _CnvObj.ZeroV)
     
     def TopocentricFromObserved(self, fromP, dumV):
         if self.refCo == None:
-            raise ValueError, "must specify refCo to convert to Topocentric from Observed"
+            raise ValueError("must specify refCo to convert to Topocentric from Observed")
         pos, tooLow = topoFromObs(fromP, self.refCo)
         return (pos, _CnvObj.ZeroV)
 

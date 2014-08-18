@@ -40,7 +40,7 @@ __all__ = ['FTPGet']
 
 import os
 import sys
-import urlparse
+import urllib.parse
 import threading
 import ftplib
 import RO.AddCallback
@@ -115,7 +115,7 @@ class FTPGet:
         self.password = password or "abc@def.org"
         
         if dispStr == None:
-            self.dispStr = urlparse.urljoin("ftp://" + self.host, self.fromPath)
+            self.dispStr = urllib.parse.urljoin("ftp://" + self.host, self.fromPath)
         else:
             self.dispStr = dispStr
 
@@ -142,7 +142,7 @@ class FTPGet:
         self._stateLock.acquire()
         try:
             if self._state != Queued:
-                raise RuntimeError, "state = %r not Queued" % (self._state,)
+                raise RuntimeError("state = %r not Queued" % (self._state,))
             self._state = Connecting
         finally:
             self._stateLock.release()
@@ -216,18 +216,18 @@ class FTPGet:
             ignored unless newState = Failed and not isDone
         """
         if _Debug:
-            print "_cleanup(%r, %r)" % (newState, exception)
+            print("_cleanup(%r, %r)" % (newState, exception))
         didOpen = (self._toFile != None)
         if self._toFile:
             self._toFile.close()
             self._toFile = None
         if _Debug:
-            print "_toFile closed"
+            print("_toFile closed")
         if self._fromSocket:
             self._fromSocket.close()
             self._fromSocket = None
         if _Debug:
-            print "_fromSocket closed"
+            print("_fromSocket closed")
 
         # if state is not valid, warn and set to Failed
         if newState not in _DoneStates:
@@ -259,14 +259,14 @@ class FTPGet:
         """
         try:
             if _Debug:
-                print "FTPGet: _getTask begins"
+                print("FTPGet: _getTask begins")
 
             # verify output file and verify/create output directory, as appropriate
             self._toPrep()
 
             # open output file
             if _Debug:
-                print "FTPGet: opening output file %r" % (self.toPath,)
+                print("FTPGet: opening output file %r" % (self.toPath,))
             if self.isBinary:
                 mode = "wb"
             else:
@@ -275,18 +275,18 @@ class FTPGet:
 
             # open input socket
             if _Debug:
-                print "FTPGet: open ftp connection to %r" % (self.host)
+                print("FTPGet: open ftp connection to %r" % (self.host))
             ftp = ftplib.FTP(self.host, self.username, self.password)
             
             if _Debug:
-                print "FTPGet: set connection isbinary=%r on %r" % (self.isBinary, self.host)
+                print("FTPGet: set connection isbinary=%r on %r" % (self.isBinary, self.host))
             if self.isBinary:
                 ftp.voidcmd("TYPE I")
             else:
                 ftp.voidcmd("TYPE A")
 
             if _Debug:
-                print "FTPGet: open socket to %r on %r" % (self.fromPath, self.host)
+                print("FTPGet: open socket to %r on %r" % (self.fromPath, self.host))
             self._fromSocket, self._totBytes = ftp.ntransfercmd('RETR %s' % self.fromPath)
 
             self._stateLock.acquire()
@@ -296,8 +296,8 @@ class FTPGet:
                 self._stateLock.release()   
 
             if _Debug:
-                print "FTPGet: totBytes = %r; read %r on %r " % \
-                    (self._totBytes, self.fromPath, self.host)
+                print("FTPGet: totBytes = %r; read %r on %r " % \
+                    (self._totBytes, self.fromPath, self.host))
             
             while True:
                 nextData = self._fromSocket.recv(8192)
@@ -310,7 +310,7 @@ class FTPGet:
                 self._toFile.write(nextData)
             
             self._cleanup(Done)
-        except Exception, e:
+        except Exception as e:
             self._cleanup(Failed, exception = e)
         
     
@@ -325,7 +325,7 @@ class FTPGet:
         """
         # if output file exists and not overwrite, complain
         if not self.overwrite and os.path.exists(self.toPath):
-            raise ValueError, "toPath %r already exists" % (self.toPath,)
+            raise ValueError("toPath %r already exists" % (self.toPath,))
         
         # if directory does not exist, create it or fail, depending on createDir;
         # else if "directory" exists but is a file, fail
@@ -336,6 +336,6 @@ class FTPGet:
                 if self.createDir:
                     os.makedirs(toDir)
                 else:
-                    raise ValueError, "directory %r does not exist" % (toDir,)
+                    raise ValueError("directory %r does not exist" % (toDir,))
             elif not os.path.isdir(toDir):
-                raise RuntimeError, "%r is a file, not a directory" % (toDir,)
+                raise RuntimeError("%r is a file, not a directory" % (toDir,))

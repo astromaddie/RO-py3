@@ -35,7 +35,7 @@ except ImportError:
     shaClass = sha.sha
 import sys
 
-from TCPConnection import TCPConnection
+from .TCPConnection import TCPConnection
 import RO.ParseMsg
 import RO.StringUtil
 
@@ -150,9 +150,9 @@ class HubConnection(TCPConnection):
                 nonce = dataDict.get("nonce", (None,))[0]
                 if (msgType != ":"):
                     errMsg = dataDict.get("why", hubMsg)[0]
-                    raise RuntimeError, "knockKnock failed: %s" % (errMsg,)
+                    raise RuntimeError("knockKnock failed: %s" % (errMsg,))
                 elif (nonce == None):
-                    raise RuntimeError, "nonce missing; got: %r" % (hubMsg,)
+                    raise RuntimeError("nonce missing; got: %r" % (hubMsg,))
                 
                 # generate the combined password
                 combPassword = shaClass(nonce+password).hexdigest()
@@ -175,9 +175,9 @@ class HubConnection(TCPConnection):
                 cmdr = dataDict.get("cmdrID", (None,))[0]
                 if (msgType != ":"):
                     errMsg = dataDict.get("why", hubMsg)[0]
-                    raise RuntimeError, "login failed: %s" % (errMsg,)
+                    raise RuntimeError("login failed: %s" % (errMsg,))
                 elif cmdr == None:
-                    raise RuntimeError, "cmdr missing; got: %r" % (hubMsg,)
+                    raise RuntimeError("cmdr missing; got: %r" % (hubMsg,))
                 
                 self.cmdr = cmdr
                     
@@ -187,8 +187,8 @@ class HubConnection(TCPConnection):
             elif self._authState == 2:
                 sys.stderr.write("warning: lost message: %r", hubMsg)
             else:
-                raise RuntimeError, "bug: unknown auth state %r" % (_authState,)        
-        except Exception, e:
+                raise RuntimeError("bug: unknown auth state %r" % (_authState,))        
+        except Exception as e:
             self._authState = -1
             self.disconnect(False, RO.StringUtil.strFromException(e))
 
@@ -225,22 +225,22 @@ class NullConnection(HubConnection):
 
 
 if __name__ == "__main__":
-    import Tkinter
+    import tkinter
     import RO.Wdg
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
 
     host = "hub35m.apo.nmsu.edu"
     port = 9877
 
     def readCallback (sock, astr):
-        print "read: %r" % (astr,)
+        print("read: %r" % (astr,))
 
     def stateCallback (sock):
         state, reason = sock.fullState
         if reason:
-            print "%s: %s" % (state, reason)
+            print("%s: %s" % (state, reason))
         else:
-            print state
+            print(state)
 
     myConn = HubConnection(
         readCallback = readCallback,
@@ -252,12 +252,12 @@ if __name__ == "__main__":
         class PasswordDialog(RO.Wdg.ModalDialogBase):
             def body(self, master):
         
-                Tkinter.Label(master, text="Program ID:").grid(row=0, column=0)
-                Tkinter.Label(master, text="Password  :").grid(row=1, column=0)
+                tkinter.Label(master, text="Program ID:").grid(row=0, column=0)
+                tkinter.Label(master, text="Password  :").grid(row=1, column=0)
         
-                self.nameEntry = Tkinter.Entry(master)
+                self.nameEntry = tkinter.Entry(master)
                 self.nameEntry.grid(row=0, column=1)
-                self.pwdEntry = Tkinter.Entry(master, show="*")
+                self.pwdEntry = tkinter.Entry(master, show="*")
                 self.pwdEntry.grid(row=1, column=1)
                 return self.nameEntry # return the item that gets initial focus
         
@@ -277,17 +277,17 @@ if __name__ == "__main__":
             )
 
 
-    Tkinter.Label(text="Send:").pack(side="left")
-    sendText = Tkinter.Entry(root)
+    tkinter.Label(text="Send:").pack(side="left")
+    sendText = tkinter.Entry(root)
     sendText.pack(fill="x", expand="yes", side="left")
     sendText.focus_set()
 
     def sendCmd (evt):
         try:
             astr = sendText.get()
-            sendText.delete(0,Tkinter.END)
+            sendText.delete(0,tkinter.END)
             myConn.writeLine(astr)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write ("Could not extract or send: %s\nError: %s\n" % (astr, e))
 
     sendText.bind('<KeyPress-Return>', sendCmd)

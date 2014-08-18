@@ -161,18 +161,18 @@ __all__ = ['StrEntry', 'ASCIIEntry', 'FloatEntry', 'IntEntry', 'DMSEntry']
 
 #import os
 import re
-import Tkinter
+import tkinter
 import RO.AddCallback
 import RO.CnvUtil
 import RO.SeqUtil
 import RO.StringUtil
 import RO.MathUtil
-import Bindings
-from CtxMenu import CtxMenuMixin
-from IsCurrentMixin import AutoIsCurrentMixin, IsCurrentMixin
-from SeverityMixin import SeveritySelectMixin
+from . import Bindings
+from .CtxMenu import CtxMenuMixin
+from .IsCurrentMixin import AutoIsCurrentMixin, IsCurrentMixin
+from .SeverityMixin import SeveritySelectMixin
 
-class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
+class _BaseEntry (tkinter.Entry, RO.AddCallback.BaseMixin,
     AutoIsCurrentMixin, IsCurrentMixin, SeveritySelectMixin, CtxMenuMixin):
     """Base class for RO.Wdg entry widgets.
     
@@ -265,7 +265,7 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
     **kargs):
         self.defValueStr = "" # just create the field for now
         if var == None:
-            var = Tkinter.StringVar()   
+            var = tkinter.StringVar()   
         self.var = var
         self.label = label
         self.helpText = helpText
@@ -298,11 +298,11 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
         
         # set default widget configuration
         kargs.setdefault("width", self.getDefaultWidth())
-        if kargs.has_key("text"):
+        if "text" in kargs:
             del(kargs["text"])
         kargs["textvariable"] = self.var  # overrides user attempt to set
         
-        Tkinter.Entry.__init__(self, master, **kargs)
+        tkinter.Entry.__init__(self, master, **kargs)
         
         self.currStrVal = ""
         self.var.trace_variable("w", self._checkVar)
@@ -395,7 +395,7 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
 
         try:
             clipPresent = (self.selection_get(selection="CLIPBOARD") != "")
-        except Tkinter.TclError:
+        except tkinter.TclError:
             clipPresent = False
 
         if self._clearMenuName:
@@ -467,7 +467,7 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
         """Returns False if the state is disabled,
         True otherwise (state is normal or active)
         """
-        return self["state"] != Tkinter.DISABLED
+        return self["state"] != tkinter.DISABLED
 
     def getEntryError(self):
         """Returns the current validation error.
@@ -521,7 +521,7 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
         try:
             self.checkValue(self.var.get())
             self.neatenDisplay()
-        except (ValueError, TypeError), e:
+        except (ValueError, TypeError) as e:
             self.setEntryError(RO.StringUtil.strFromException(e))
             self.focus_set()
             return False
@@ -684,14 +684,14 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
             self.currStrVal = newStrVal
             if self._entryError:
                 self.setEntryError(None)
-        except (ValueError, TypeError), e:
+        except (ValueError, TypeError) as e:
             self.setEntryError(RO.StringUtil.strFromException(e))
             try:
                 # verify that the previous value works, else clear field
                 # this test should rarely fail!
                 self.checkPartialValue(self.currStrVal)
                 self.var.set(self.currStrVal)
-            except (ValueError, TypeError), e:
+            except (ValueError, TypeError) as e:
                 self.var.set("")
     
         self._doCallbacks()
@@ -713,7 +713,7 @@ class _BaseEntry (Tkinter.Entry, RO.AddCallback.BaseMixin,
             try:
                 self.checkValue(currVal)
                 self.neatenDisplay()
-            except (ValueError, TypeError), e:
+            except (ValueError, TypeError) as e:
                 self.setEntryError(RO.StringUtil.strFromException(e))
                 self.focus_set()
                 return "break"
@@ -963,7 +963,7 @@ class _NumEntry (_BaseEntry):
         If val is "" or None, returns None
         Performs no range checking.
         """
-        if isinstance(val, basestring):
+        if isinstance(val, str):
             return self.numFromStr(val)
         return val
     
@@ -976,7 +976,7 @@ class _NumEntry (_BaseEntry):
         If format is omitted, the default format is used.
         Performs no range checking.
         """
-        if isinstance(val, basestring):
+        if isinstance(val, str):
             return val
         return self.strFromNum(val, format)
 
@@ -1412,7 +1412,7 @@ class DMSEntry (_NumEntry):
                     precision = precision,
                     omitExtraFields = self.omitExtraFields,
                 )
-        except ValueError, e:
+        except ValueError as e:
             raise ValueError("%s cannot format data %r with format=(nFields=%r, precision=%r): error=%s" % \
                 (self._getErrorPrefix(), numVal, nFields, precision, e))
     
@@ -1455,7 +1455,7 @@ class DMSEntry (_NumEntry):
         if self.isHours:
             unitsStr = "%sh%sm%ss%s%s" % unitsSepTuple
         else:
-            unitsStr = u"%s\N{DEGREE SIGN}%s\'%s\"%s%s" % unitsSepTuple
+            unitsStr = "%s\N{DEGREE SIGN}%s\'%s\"%s%s" % unitsSepTuple
         self.unitsVar.set(unitsStr)
 
         # index = nFields*2-1  # use if there is a separator between characters, e.g. h:m:s
@@ -1488,7 +1488,7 @@ class DMSEntry (_NumEntry):
             currVal = self.var.get()
             # try to select the previous field
             if self.selection_present():
-                ind = self.index(Tkinter.SEL_FIRST) - 1
+                ind = self.index(tkinter.SEL_FIRST) - 1
             else:
                 ind = self.index("insert") - 1
             (leftInd, rightInd) = RO.StringUtil.findLeftNumber(currVal, ind)
@@ -1501,7 +1501,7 @@ class DMSEntry (_NumEntry):
             # try to select the next digit
             currVal = self.var.get()
             if self.selection_present():
-                ind = self.index(Tkinter.SEL_LAST)
+                ind = self.index(tkinter.SEL_LAST)
             else:
                 ind = self.index("insert")
             (leftInd, rightInd) = RO.StringUtil.findRightNumber(currVal, ind)
@@ -1515,7 +1515,7 @@ class DMSEntry (_NumEntry):
 
 if __name__ == "__main__":
     from RO.Wdg.PythonTk import PythonTk
-    import StatusBar
+    from . import StatusBar
     root = PythonTk()
     
     entryList = []
@@ -1527,10 +1527,10 @@ if __name__ == "__main__":
             return "%r" % (entry.getString(),)
     
     def addEntry(descr, entry, unitsLabel=None):
-        newFrame = Tkinter.Frame(root)
+        newFrame = tkinter.Frame(root)
         newFrame.lower()
         if descr:
-            Tkinter.Label(newFrame, text=descr).pack(side="left")
+            tkinter.Label(newFrame, text=descr).pack(side="left")
         entry.pack(in_=newFrame, side="left")
         if unitsLabel:
             unitsLabel.pack(in_=newFrame, side="left")
@@ -1538,10 +1538,10 @@ if __name__ == "__main__":
         entryList.append((descr, entry))
         
         def callFunc(wdg, descr=descr):
-            print "%s callFunc; value=%s; inMethodCall=%s" % (descr, fmtEntry(entry), entry.inMethodCall())
+            print("%s callFunc; value=%s; inMethodCall=%s" % (descr, fmtEntry(entry), entry.inMethodCall()))
             
         def doneFunc(wdg, descr=descr):
-            print "%s doneFunc; value=%s; inMethodCall=%s" % (descr, fmtEntry(entry), entry.inMethodCall())
+            print("%s doneFunc; value=%s; inMethodCall=%s" % (descr, fmtEntry(entry), entry.inMethodCall()))
             
         entry.addCallback(callFunc)
         if not entry._doneFunc:
@@ -1551,7 +1551,7 @@ if __name__ == "__main__":
     
     def doPrint(*args):
         for (descr, entry) in entryList:
-            print "%s value=%s" % (descr, fmtEntry(entry))
+            print("%s value=%s" % (descr, fmtEntry(entry)))
     
     def doDefault(*args):
         for (descr, entry) in entryList:
@@ -1567,16 +1567,16 @@ if __name__ == "__main__":
             if isinstance(entry, DMSEntry):
                 entry.setIsHours(False)
 
-    getButton = Tkinter.Button (root, command=doPrint, text="Print Values")
+    getButton = tkinter.Button (root, command=doPrint, text="Print Values")
     getButton.pack()
     
-    defButton = Tkinter.Button (root, command=doDefault, text="Default")
+    defButton = tkinter.Button (root, command=doDefault, text="Default")
     defButton.pack()
     
-    hrsButton = Tkinter.Button (root, command=setHours, text="DMS in hrs")
+    hrsButton = tkinter.Button (root, command=setHours, text="DMS in hrs")
     hrsButton.pack()
     
-    degButton = Tkinter.Button (root, command=setDeg, text="DMS in deg")
+    degButton = tkinter.Button (root, command=setDeg, text="DMS in deg")
     degButton.pack()
     
     statusBar = StatusBar.StatusBar(root)
@@ -1616,7 +1616,7 @@ if __name__ == "__main__":
     )
     
     def doneFunc(wdg):
-        print "doneFunc(%r)" % (wdg,)
+        print("doneFunc(%r)" % (wdg,))
 
     addEntry (
         "FloatEntry, exp OK 1-90",
@@ -1642,7 +1642,7 @@ if __name__ == "__main__":
     )
     
     
-    absUnitsVar = Tkinter.StringVar()
+    absUnitsVar = tkinter.StringVar()
     addEntry (
         "Abs DMSEntry -90-90 deg",
         DMSEntry(root,
@@ -1651,10 +1651,10 @@ if __name__ == "__main__":
             unitsVar=absUnitsVar,
             helpText = "d:m:s in the range -90-90",
         ),
-        Tkinter.Label(root, textvar=absUnitsVar, width=5),
+        tkinter.Label(root, textvar=absUnitsVar, width=5),
     )
     
-    abs2UnitsVar = Tkinter.StringVar()
+    abs2UnitsVar = tkinter.StringVar()
     addEntry (
         "Abs DMSEntry 25-180 deg",
         DMSEntry(root,
@@ -1664,10 +1664,10 @@ if __name__ == "__main__":
             helpText = "d:m:s in the range 25-180",
             clearMenu = None,
         ),
-        Tkinter.Label(root, textvar=abs2UnitsVar, width=5),
+        tkinter.Label(root, textvar=abs2UnitsVar, width=5),
     )
     
-    relUnitsVar = Tkinter.StringVar()
+    relUnitsVar = tkinter.StringVar()
     addEntry (
         "Rel DMSEntry -90-90 sec",
         DMSEntry(root,
@@ -1680,10 +1680,10 @@ if __name__ == "__main__":
             minMenu = "Minimum",
             maxMenu = "Maximum",
         ),
-        Tkinter.Label(root, textvar=relUnitsVar, width=5),
+        tkinter.Label(root, textvar=relUnitsVar, width=5),
     )
     
-    rel2UnitsVar = Tkinter.StringVar()
+    rel2UnitsVar = tkinter.StringVar()
     addEntry (
         "Rel DMSEntry 0-180 sec",
         DMSEntry(root,
@@ -1696,7 +1696,7 @@ if __name__ == "__main__":
             minMenu = "Minimum",
             maxMenu = "Maximum",
         ),
-        Tkinter.Label(root, textvar=rel2UnitsVar, width=5),
+        tkinter.Label(root, textvar=rel2UnitsVar, width=5),
     )
     
     statusBar.pack(side="top", expand="yes", fill="x")

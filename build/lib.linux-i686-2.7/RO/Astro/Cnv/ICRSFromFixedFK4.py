@@ -81,7 +81,7 @@ def icrsFromFixedFK4 (fk4P, fk4Date):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing icrsFromFixedFK4"
+    print("testing icrsFromFixedFK4")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -97,6 +97,6 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = icrsFromFixedFK4(*testInput)
         if RO.SeqUtil.matchSequences(actualOutput, expectedOutput, rtol=1.0e-14):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

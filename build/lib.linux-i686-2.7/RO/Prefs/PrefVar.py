@@ -90,8 +90,8 @@ History:
 import os.path
 import re
 import sys
-import Tkinter
-import tkFont
+import tkinter
+import tkinter.font
 import RO.Alg
 import RO.CnvUtil
 import RO.MathUtil
@@ -162,7 +162,7 @@ class PrefVar(object):
         
         try:
             self.setDefValue(defValue)
-        except (ValueError, TypeError), e:
+        except (ValueError, TypeError) as e:
             sys.stderr.write("Default rejected for %s %s: %s\n" % \
                 (self.__class__.__name__, name, e))
     
@@ -202,7 +202,7 @@ class PrefVar(object):
         # check that value is in the list of valid values, if present
         if self.validValues:
             if value not in self.validValues:
-                raise ValueError, "value %r not in %r" % (value, self.validValues)
+                raise ValueError("value %r not in %r" % (value, self.validValues))
         
         # apply local checks
         self.locCheckValue(value)
@@ -211,7 +211,7 @@ class PrefVar(object):
         try:
             self.asStr(value)
         except:
-            raise ValueError, "value %r could not be formatted with string %r" % (value, self.formatStr)
+            raise ValueError("value %r could not be formatted with string %r" % (value, self.formatStr))
     
     def getDefValue(self):
         """Return the current default value"""
@@ -272,7 +272,7 @@ class PrefVar(object):
         
     def setValue (self, rawValue):
         """Accepts values of the correct type or a string representation"""
-        if isinstance(rawValue, basestring):
+        if isinstance(rawValue, str):
             value = self.asValue(rawValue)
         else:
             value = rawValue
@@ -353,7 +353,7 @@ class StrPrefVar(PrefVar):
         """
         if self.validRE:
             if self.validRE.match(value) == None:
-                raise ValueError, "%r does not match pattern %r" % (value, self.finalPattern)
+                raise ValueError("%r does not match pattern %r" % (value, self.finalPattern))
     
     def getRangeStr(self):
         """Return a brief description of the variable's range or other restrictions.
@@ -415,8 +415,8 @@ class DirectoryPrefVar(StrPrefVar):
             return
         if not os.path.isdir(value):
             if not os.path.exists(value):
-                raise ValueError, "%r does not exist on this file system" % (value,)
-            raise ValueError, "%r is not a directory" % (value,)
+                raise ValueError("%r does not exist on this file system" % (value,))
+            raise ValueError("%r is not a directory" % (value,))
     
 
 class FilePrefVar(StrPrefVar):
@@ -457,8 +457,8 @@ class FilePrefVar(StrPrefVar):
             return
         if not os.path.isfile(value):
             if not os.path.exists(value):
-                raise ValueError, "%r does not exist on this file system" % (value,)
-            raise ValueError, "%r is not a file" % (value,)
+                raise ValueError("%r does not exist on this file system" % (value,))
+            raise ValueError("%r is not a file" % (value,))
     
 
 class SoundPrefVar(FilePrefVar):
@@ -739,14 +739,14 @@ class ColorUpdate(object):
     def setColor(self, *args):
         # if we haven't gotten a widget yet, now is the time
         if not self.wdg:
-            self.wdg = Tkinter.Label()
+            self.wdg = tkinter.Label()
 
         colorDict = {}
-        for option, var in self.varDict.iteritems():
+        for option, var in self.varDict.items():
             colorDict[option] = var.getValue()
 
         # background is required; make sure we have it
-        if not colorDict.has_key("background"):
+        if "background" not in colorDict:
             colorDict["background"] = self.wdg.cget("background")
 
         self.wdg.tk_setPalette(**colorDict)
@@ -769,7 +769,7 @@ class ColorPrefVar(PrefVar):
         kargs = kargs.copy()    # prevent modifying a passed-in dictionary
 
         # create an arbitrary Tk widget we can query to convert colors
-        self.colorCheckWdg = Tkinter.Label()
+        self.colorCheckWdg = tkinter.Label()
 
         kargs["formatStr"] = "%s"
         kargs["cnvFunc"] = str
@@ -790,8 +790,8 @@ class ColorPrefVar(PrefVar):
         """
         try:
             self.colorCheckWdg.winfo_rgb(value)
-        except Tkinter.TclError, e:
-            raise ValueError, RO.StringUtil.strFromException(e)
+        except tkinter.TclError as e:
+            raise ValueError(RO.StringUtil.strFromException(e))
 
 class FontPrefVar(PrefVar):
     """Tk Font preference variable.
@@ -837,7 +837,7 @@ class FontPrefVar(PrefVar):
     ):
         kargs = kargs.copy()    # prevent modifying a passed-in dictionary
 
-        self.font = font or tkFont.Font()
+        self.font = font or tkinter.font.Font()
         kargs["formatStr"] = "%r"
         kargs["cnvFunc"] = dict # a function that parsed string representations of a dict would be nicer
 
@@ -860,7 +860,7 @@ class FontPrefVar(PrefVar):
             netDefValue.update(font.configure())
         if defWdg:
             # the following is the only way I know to obtain a font dictionary from a widget
-            wdgFontDict = tkFont.Font(font=defWdg.cget("font")).configure()
+            wdgFontDict = tkinter.font.Font(font=defWdg.cget("font")).configure()
             netDefValue.update(wdgFontDict)
         if defValue:
             # defValue is the only one likely to have a bogus value; check it before applying it
@@ -877,7 +877,7 @@ class FontPrefVar(PrefVar):
 
         # if optionPatterns supplied, add font to option database
         for ptn in optionPatterns:
-            Tkinter.Label().option_add(ptn, self.font)
+            tkinter.Label().option_add(ptn, self.font)
     
     def getDefValue(self):
         """Return the current default value"""
@@ -889,9 +889,9 @@ class FontPrefVar(PrefVar):
     def locCheckValue(self, value):
         """Test that the value is valid.
         """
-        badKeys = [key for key in value.iterkeys() if key not in self._internalDefFontDict]
+        badKeys = [key for key in value.keys() if key not in self._internalDefFontDict]
         if badKeys:
-            raise ValueError, "Invalid key(s) %s in font dictionary %r" % (badKeys, value)
+            raise ValueError("Invalid key(s) %s in font dictionary %r" % (badKeys, value))
 
     def setValue (self, rawValue):
         """Updates the internal font information from the font dictionary provided
@@ -975,7 +975,7 @@ class FontSizePrefVar(PrefVar):
     ):
         kargs = kargs.copy()    # prevent modifying a passed-in dictionary
 
-        self.font = tkFont.Font()
+        self.font = tkinter.font.Font()
         kargs["formatStr"] = "%s"
         kargs["cnvFunc"] = int
         
@@ -985,7 +985,7 @@ class FontSizePrefVar(PrefVar):
             netDefValue = font.cget("size")
         if defWdg:
             # the following is the only way I know to obtain a font dictionary from a widget
-            netDefValue = tkFont.Font(font=defWdg.cget("font")).cget("size")
+            netDefValue = tkinter.font.Font(font=defWdg.cget("font")).cget("size")
         if defValue:
             # defValue is the only one likely to have a bogus value; check it before applying it
             self.locCheckValue(defValue)
@@ -1000,7 +1000,7 @@ class FontSizePrefVar(PrefVar):
 
         # if optionPatterns supplied, add font to option database
         for ptn in optionPatterns:
-            Tkinter.Label().option_add(ptn, self.font)
+            tkinter.Label().option_add(ptn, self.font)
     
     def locCheckValue(self, value):
         """Test that the value is valid.
@@ -1056,7 +1056,7 @@ class PrefSet(object):
                 self.addPrefVar(prefVar)
         self.oldPrefDict = {}
         if oldPrefInfo:
-            for oldPrefName, newPrefName in oldPrefInfo.iteritems():
+            for oldPrefName, newPrefName in oldPrefInfo.items():
                 if newPrefName:
                     if newPrefName.lower() not in self.prefDict:
                         raise RuntimeError("Invalid oldPrefInfo %s: %s; nonexistent new pref name" %
@@ -1083,14 +1083,14 @@ class PrefSet(object):
         """
         catDict = RO.Alg.OrderedDict()
         
-        for prefVar in self.prefDict.itervalues():
+        for prefVar in self.prefDict.values():
             catDict.setdefault(prefVar.category, []).append(prefVar)
         return catDict
     
     def restoreDefault(self):
         """Restores all preferences to their default value.
         """
-        for pref in self.prefDict.itervalues():
+        for pref in self.prefDict.values():
             pref.restoreDefault()
     
     def readFromFile(self, fileName=None):
@@ -1133,7 +1133,7 @@ class PrefSet(object):
 
         try:
             inFile = file(fileName, 'rU')
-        except StandardError, e:
+        except Exception as e:
             sys.stderr.write("Could not open preference file %r; error: %s\n" % (fileName, e))
             return
             
@@ -1165,7 +1165,7 @@ class PrefSet(object):
                     # because it may include a comment
                     prefValue = eval(prefValueStr)
                     prefVar.setValue(prefValue)
-                except StandardError, e:
+                except Exception as e:
                     sys.stderr.write("Invalid data on line %r of file %r; error: %s\n" % (line, fileName, e))
                     continue
         finally:
@@ -1195,7 +1195,7 @@ class PrefSet(object):
                     else:
                         # line does not being with a comment; prepend "# "
                         outFile.write("# %s\n" % headerLine)
-            for prefVar in self.prefDict.itervalues():
+            for prefVar in self.prefDict.values():
                 if maskDefault and prefVar.value == prefVar.defValue:
                     outFile.write("# %s = %r\n" % (prefVar.name, prefVar.getValue()))
                 else:
@@ -1209,15 +1209,15 @@ class PrefSet(object):
         """
         trueName = fileName or self.defFileName
         if not trueName:
-            raise RuntimeError, "No file specified and no default file"
+            raise RuntimeError("No file specified and no default file")
         return trueName
 
 
 if __name__ == "__main__":
-    print "running PrefVar test"
+    print("running PrefVar test")
 
     def callFunc(value, prefVar):
-        print "callFunc called with value=%r, prefVar='%s'" % (value, prefVar)
+        print("callFunc called with value=%r, prefVar='%s'" % (value, prefVar))
 
     pv = PrefVar(
         name="basicPref",
@@ -1227,10 +1227,10 @@ if __name__ == "__main__":
         callFunc=callFunc,
         callNow=True,
     )
-    print "created a PrefVar with default value 0; value =", pv.getValue()
+    print("created a PrefVar with default value 0; value =", pv.getValue())
     
     pv.setValue("aString")
-    print "set value to 'aString'; value =", pv.getValue()
+    print("set value to 'aString'; value =", pv.getValue())
         
     pv.restoreDefault()
-    print "restored default; value =", pv.getValue()
+    print("restored default; value =", pv.getValue())

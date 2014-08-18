@@ -7,12 +7,12 @@ Based on code in John Grayson's "Python and Tkinter Programming"
 """
 import sys
 import os
-import Tkinter
+import tkinter
 RORoot = os.path.join(os.path.dirname(os.path.abspath(os.path.dirname(__file__))), "python")
 sys.path.append(RORoot)
 import RO.Wdg
 
-class EventLogger(Tkinter.Frame):
+class EventLogger(tkinter.Frame):
     EventDict = {
          '2': 'KeyPress',
          '3': 'KeyRelease',
@@ -39,16 +39,16 @@ class EventLogger(Tkinter.Frame):
     }
 
     def __init__(self, master):
-        Tkinter.Frame.__init__(self, master)
+        tkinter.Frame.__init__(self, master)
         # dict of event type: event name
         
         self.eventInd = 0
         
-        self.userLabel = Tkinter.Label(self, text="Type here:")
-        self.userEntry  = Tkinter.Entry(self, highlightthickness=2)
+        self.userLabel = tkinter.Label(self, text="Type here:")
+        self.userEntry  = tkinter.Entry(self, highlightthickness=2)
         self.logWdg = RO.Wdg.LogWdg(self)
         
-        for eventName in self.EventDict.values():
+        for eventName in list(self.EventDict.values()):
             self.userLabel.bind('<%s>' % eventName, self.reportEvent)
             self.userEntry.bind('<%s>' % eventName, self.reportEvent)
         
@@ -100,7 +100,7 @@ class EventLogger(Tkinter.Frame):
             
 
 if __name__ == "__main__":
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     root.geometry("800x500")
     root.wm_title("Event Logger")
     evtLogger = EventLogger(root)

@@ -42,7 +42,7 @@ in a Mac-like way is difficult.
 """
 __all__ = ['makeReadOnly', 'stdBindings', 'stopEvent']
 
-import Tkinter
+import tkinter
 import RO.TkUtil
 
 def doQuit(evt):
@@ -110,21 +110,21 @@ def stdBindings(root, debug=False):
     if winSys == RO.TkUtil.WSysX11:
         # unix
         if debug:
-            print "Unix/x11 key bindings"
+            print("Unix/x11 key bindings")
 #         root.event_add("<<CtxMenu>>", "<Control-Button-1>")
 #         root.event_add("<<CtxMenu>>", "<Control-Button-2>")
 #         root.event_add("<<CtxMenu>>", "<Control-Button-3>")
     else:
         if winSys == RO.TkUtil.WSysAqua:
             if debug:
-                print "Mac Aqua key bindings"
+                print("Mac Aqua key bindings")
             root.bind_class("Entry", "<Key-Up>", _entryGoToLeftEdge)
             root.bind_class("Entry", "<Key-Down>", _entryGoToRightEdge)
             root.bind_class("Entry", "<Command-Key-Left>", _entryGoToLeftEdge)
             root.bind_class("Entry", "<Command-Key-Right>", _entryGoToRightEdge)
         else:
             if debug:
-                print "Windows key bindings"
+                print("Windows key bindings")
         
         """Disable <<Paste-Selection>>
         
@@ -193,14 +193,14 @@ def _entryGoToRightEdge(evt):
     evt.widget.icursor("end")
 
 if __name__ == "__main__":
-    root = Tkinter.Tk()
+    root = tkinter.Tk()
     stdBindings(root, debug=1)
     
-    t = Tkinter.Text(root, width=20, height=5)
-    tr = Tkinter.Text(root, width=20, height=5)
+    t = tkinter.Text(root, width=20, height=5)
+    tr = tkinter.Text(root, width=20, height=5)
     tr.insert("end", "here is some test text for the read only text widget")
     makeReadOnly(tr)
-    e = Tkinter.Entry(root)
+    e = tkinter.Entry(root)
     t.pack()
     tr.pack()
     e.pack()

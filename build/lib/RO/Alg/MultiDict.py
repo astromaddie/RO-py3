@@ -22,7 +22,7 @@ class ListDict(UserDict.UserDict):
 
         Supports the notation: aListDict[key] = val
         """
-        if self.data.has_key(key):
+        if key in self.data:
             self.data[key].append(val)
         else:
             self.data[key] = [val]
@@ -34,7 +34,7 @@ class ListDict(UserDict.UserDict):
         - valList: an iterable collection (preferably ordered) of values
         """
         valList = list(valList)
-        if self.data.has_key(key):
+        if key in self.data:
             self.data[key] += valList
         else:
             self.data[key] = valList
@@ -95,10 +95,10 @@ if __name__ == "__main__":
     ad2.setdefault("a", "foo")
     ad2.setdefault("b", "bar")
     ad2.setdefault("b", "bar")
-    print "listdict:"
-    print RO.StringUtil.prettyDict(ad)
-    print "listdict copy (modified):"
-    print RO.StringUtil.prettyDict(ad2)
+    print("listdict:")
+    print((RO.StringUtil.prettyDict(ad)))
+    print("listdict copy (modified):")
+    print((RO.StringUtil.prettyDict(ad2)))
     
 
     ad = SetDict()
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     ad2.setdefault("a", "foo")
     ad2.setdefault("b", "bar")
     ad2.setdefault("b", "bar")
-    print "setdict:"
-    print RO.StringUtil.prettyDict(ad)
-    print "setdict copy (modified):"
-    print RO.StringUtil.prettyDict(ad2)
+    print("setdict:")
+    print((RO.StringUtil.prettyDict(ad)))
+    print("setdict copy (modified):")
+    print((RO.StringUtil.prettyDict(ad2)))

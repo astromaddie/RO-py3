@@ -23,7 +23,7 @@ History:
 """
 __all__ = ['StatusConfigGridder']
 
-import Gridder
+from . import Gridder
 
 ConfigCat = "config"
 
@@ -219,7 +219,7 @@ class _StatusConfigGridSet(Gridder._BaseGridSet):
             
             self.cfgUnitsWdg = self._makeWdg(cfgUnits)
             if self.cfgUnitsWdg and self.cfgUnitsWdg == self.unitsWdg:
-                raise ValueError, "units is a widget, so cfgUnits must be specified and must be a different widget"
+                raise ValueError("units is a widget, so cfgUnits must be specified and must be a different widget")
             self._gridWdg(self.cfgUnitsWdg, sticky="w", colSpan=1)
         else:
             self.cfgWdg = None

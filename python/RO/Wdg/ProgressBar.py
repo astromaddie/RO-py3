@@ -30,13 +30,13 @@ __all__ = ['ProgressBar', 'TimeBar']
 import time
 import RO.SeqUtil
 from RO.TkUtil import Timer
-import Tkinter
-import Button
-import Entry
-import Gridder
-import Label
+import tkinter
+from . import Button
+from . import Entry
+from . import Gridder
+from . import Label
 
-class ProgressBar (Tkinter.Frame):
+class ProgressBar (tkinter.Frame):
     """A bar graph showing a value or fraction of a task performed.
     
     Contains three widgets:
@@ -92,7 +92,7 @@ class ProgressBar (Tkinter.Frame):
         helpURL = None,
     **kargs):
         # handle defaults for background, borderwidth and relief
-        e = Tkinter.Entry()
+        e = tkinter.Entry()
         for item in ("background", "borderwidth", "relief"):
             kargs.setdefault(item, e[item])
         
@@ -100,7 +100,7 @@ class ProgressBar (Tkinter.Frame):
         for item in ("selectborderwidth", "highlightthickness"):
             kargs.setdefault(item, 0)
 
-        Tkinter.Frame.__init__(self, master)
+        tkinter.Frame.__init__(self, master)
 
         # basics
         self.constrainValue = constrainValue
@@ -146,7 +146,7 @@ class ProgressBar (Tkinter.Frame):
             self.labelWdg.pack(side = packSide)
         
         # create canvas for bar graph
-        self.cnv = Tkinter.Canvas(self,
+        self.cnv = tkinter.Canvas(self,
             width = cnvWidth,
             height = cnvHeight,
         **kargs)
@@ -314,7 +314,7 @@ class ProgressBar (Tkinter.Frame):
         """
         if wdgInfo == None:
             return wdgInfo
-        elif isinstance(wdgInfo, Tkinter.Widget):
+        elif isinstance(wdgInfo, tkinter.Widget):
             # a widget; assume it's a Label widget of some kind
             return wdgInfo
         
@@ -322,7 +322,7 @@ class ProgressBar (Tkinter.Frame):
         # set up the keyword arguments
         kargs.setdefault("helpText", self.helpText)
         kargs.setdefault("helpURL", self.helpURL)
-        if isinstance(wdgInfo, Tkinter.Variable):
+        if isinstance(wdgInfo, tkinter.Variable):
             kargs["textvariable"] = wdgInfo
         else:
             kargs["text"] = wdgInfo
@@ -389,7 +389,7 @@ class TimeBar(ProgressBar):
         self._updateTimer = Timer()
         self._startTime = None
 
-        if kargs.has_key("value"):
+        if "value" in kargs:
             self.start(kargs["value"])
     
     def clear(self):
@@ -469,7 +469,7 @@ class TimeBar(ProgressBar):
         self._updateTimer.cancel()
         
         if self._startTime == None:
-            raise RuntimeError, "bug! nothing to update"
+            raise RuntimeError("bug! nothing to update")
         
         # update displayed value
         if self._countUp:
@@ -491,7 +491,7 @@ class TimeBar(ProgressBar):
         
 
 if __name__ == "__main__":
-    import PythonTk
+    from . import PythonTk
     root = PythonTk.PythonTk()
     
     # horizontal and vertical progress bars

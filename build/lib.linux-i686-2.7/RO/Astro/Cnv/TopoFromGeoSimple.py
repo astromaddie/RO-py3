@@ -5,7 +5,7 @@ History:
 2007-04-24 ROwen    Changed Numeric to numpy in a doc string.
 """
 import RO.MathUtil
-from AzAltFromHADec import *
+from .AzAltFromHADec import *
 
 # needs test code
 

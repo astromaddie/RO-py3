@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import math
 import RO.PhysConst
-from SCFromCC import *
+from .SCFromCC import *
 
 # Constants
 _ASPerCy_Per_RadPerYear = 100.0 * RO.PhysConst.ArcSecPerDeg / RO.PhysConst.RadPerDeg
@@ -86,7 +86,7 @@ def scFromCCPV (p, v):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing scFromCCPV"
+    print("testing scFromCCPV")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -207,6 +207,6 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-10, atol=1.0e-10):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

@@ -3,4 +3,4 @@
 See ../README.txt and ../docs of source code
 for information and license
 """
-from Version import __version__
+from .Version import __version__

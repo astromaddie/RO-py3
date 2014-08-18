@@ -6,10 +6,10 @@ P.T.Wallace Starlink    21 July 1994
 2007-04-24 ROwen    Removed unused import of Numeric
 """
 from math import sqrt
-from vn import vn
-from evp import evp
-from prenut import prenut
-from epj import epj
+from .vn import vn
+from .evp import evp
+from .prenut import prenut
+from .epj import epj
 
 # Constants
 # Light time for 1 au (sec)
@@ -99,7 +99,7 @@ def mappa (eq, tdb):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing mappa"
+    print("testing mappa")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -220,7 +220,7 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-8):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
 

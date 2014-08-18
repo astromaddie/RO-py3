@@ -27,7 +27,7 @@ History:
 """
 import sys
 import RO.Wdg
-from TCPConnection import *
+from .TCPConnection import *
 
 class VMSTelnet (TCPConnection):
     """A telnet connection that negotiates the telnet protocol
@@ -118,7 +118,7 @@ class VMSTelnet (TCPConnection):
         pwdDialog = PasswordDialog(master, title="%s@%s" % (username, self.host))
         passwd = pwdDialog.result
         if passwd:
-            print "calling connect"
+            print("calling connect")
             self.connect (
                 username = username,
                 password = passwd,
@@ -172,7 +172,7 @@ class VMSTelnet (TCPConnection):
                     self._partialData = ""
                     self._authDone()
                 else:
-                    print self._partialData
+                    print(self._partialData)
                     self._partialData = ""
             else:
                 self._partialData += c
@@ -184,7 +184,7 @@ class NullConnection(TCPConnection):
     but done to make it clear to users that it is a fake).
     """
     def connect(self):
-        raise RuntimeError, "NullConnection cannot connect"
+        raise RuntimeError("NullConnection cannot connect")
 
     def isConnected(self):
         return True
@@ -194,21 +194,21 @@ class NullConnection(TCPConnection):
 
 
 if __name__ == "__main__":
-    import Tkinter
-    root = Tkinter.Tk()
+    import tkinter
+    root = tkinter.Tk()
 
     host = "tccdev"
     username = "TCC"
 
     def readCallback (sock, astr):
-        print "read: %r" % (astr,)
+        print("read: %r" % (astr,))
 
     def stateCallback (sock):
         state, reason = sock.fullState
         if reason:
-            print "%s: %s" % (state, reason)
+            print("%s: %s" % (state, reason))
         else:
-            print state
+            print(state)
 
     myConn = VMSTelnet(
         host = host, 
@@ -216,18 +216,18 @@ if __name__ == "__main__":
         stateCallback = stateCallback,
     )
 
-    sendText = Tkinter.Entry(root)
-    sendText.pack(fill=Tkinter.X, expand=Tkinter.YES)
+    sendText = tkinter.Entry(root)
+    sendText.pack(fill=tkinter.X, expand=tkinter.YES)
     sendText.focus_set()
 
-    Tkinter.Button(root, text="Disconnect", command=myConn.disconnect).pack()   
+    tkinter.Button(root, text="Disconnect", command=myConn.disconnect).pack()   
 
     def sendCmd (evt):
         try:
             astr = sendText.get()
-            sendText.delete(0,Tkinter.END)
+            sendText.delete(0,tkinter.END)
             myConn.writeLine(astr)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write ("Could not extract or send: %s\n" % (astr))
             sys.stderr.write ("Error: %s\n" % (e))
 

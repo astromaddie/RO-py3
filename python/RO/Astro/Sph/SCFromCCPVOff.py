@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from AngSideAng import *
-from SCFromCCPV import *
-from SCFromCC import *
+from .AngSideAng import *
+from .SCFromCCPV import *
+from .SCFromCC import *
 
 def scFromCCPVOff (p, v, offP):
     """
@@ -60,7 +60,7 @@ def scFromCCPVOff (p, v, offP):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing scFromCCPVOff"
+    print("testing scFromCCPVOff")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -96,6 +96,6 @@ if __name__ == "__main__":
         actualFlat = RO.SeqUtil.flatten(actualOutput)
         expectedFlat = RO.SeqUtil.flatten(expectedOutput)
         if RO.SeqUtil.matchSequences(actualFlat, expectedFlat, rtol=1.0e-10, atol=1.0e-10):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

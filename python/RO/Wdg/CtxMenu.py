@@ -42,10 +42,11 @@ History:
 """
 __all__ = ['CtxMenu', 'CtxMenuMixin', 'addCtxMenu']
 
-import Tkinter
+import tkinter
 import RO.Comm.BrowseURL
 import RO.Constants
 import RO.OS
+import collections
 
 class CtxMenu(object):
     def __init__(self,
@@ -121,7 +122,7 @@ class CtxMenu(object):
         Override to build your own menu from scratch.
         If you only want to add some entries, override ctxConfigMenu instead.
         """
-        menu = Tkinter.Menu(master=self.__getWdg(), tearoff=0)
+        menu = tkinter.Menu(master=self.__getWdg(), tearoff=0)
         if self.__configMenuFunc(menu):
             helpURL = self.getHelpURL()
             if helpURL:
@@ -137,7 +138,7 @@ class CtxMenu(object):
 
         Raise ValueError if configFunc not callable.
         """
-        if configFunc and not callable(configFunc):
+        if configFunc and not isinstance(configFunc, collections.Callable):
             raise ValueError("configFunc %r is not callable" % (configFunc,))
         self.__configMenuFunc = configFunc or self.ctxConfigMenu
     
@@ -202,15 +203,15 @@ def addCtxMenu(
 
 
 if __name__ == "__main__":
-    import Bindings
-    import PythonTk
+    from . import Bindings
+    from . import PythonTk
     root = PythonTk.PythonTk()
 
     # set up standard binding for <<CtxMenu>>   
     Bindings.stdBindings(root)
 
     # add help to a standard Tkinter widget
-    stdLabel = Tkinter.Label(text="Standard label")
+    stdLabel = tkinter.Label(text="Standard label")
     addCtxMenu(
         wdg = stdLabel,
         helpURL = "http://brokenURL.html",
@@ -218,9 +219,9 @@ if __name__ == "__main__":
     stdLabel.pack()
     
     # create a new label class that automatically has help:
-    class HelpLabel(Tkinter.Label, CtxMenuMixin):
+    class HelpLabel(tkinter.Label, CtxMenuMixin):
         def __init__(self, master, helpURL=None, **kargs):
-            Tkinter.Label.__init__(self, master=master, **kargs)
+            tkinter.Label.__init__(self, master=master, **kargs)
             CtxMenuMixin.__init__(self, helpURL)
 
     hLabel = HelpLabel(root,

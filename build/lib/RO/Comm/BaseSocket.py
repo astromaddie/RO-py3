@@ -153,14 +153,14 @@ class Base(object):
         for stateCallback in self._stateCallbackList:
             try:
                 stateCallback(self)
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("%s state stateCallback %s failed: %s\n" % (self, stateCallback, e,))
                 traceback.print_exc(file=sys.stderr)
 
         if self.isDone:
             try:
                 self._clearCallbacks()
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("%s failed to clear callbacks: %s\n" % (self, e,))
                 traceback.print_exc(file=sys.stderr)
 

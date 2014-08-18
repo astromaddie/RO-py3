@@ -19,7 +19,7 @@ class ConstrainedGaussianRandomWalk(object):
         if not self.minValue <= self.homeValue <= self.maxValue:
             raise RuntimeError("Need min=%s <= home=%s <= max=%s" % (self.minValue, self.homeValue, self.maxValue))
     
-    def next(self):
+    def __next__(self):
         """Randomly change the value and return the next value
         """
         rawDelta = random.gauss(0, self.sigma)
@@ -50,7 +50,7 @@ class GaussianRandomWalk(object):
         self.value = float(initialValue)
         self.sigma = float(sigma)
     
-    def next(self):
+    def __next__(self):
         """Randomly change the value and return the new value
         """
         self.value += random.gauss(0, self.sigma)
@@ -59,6 +59,6 @@ class GaussianRandomWalk(object):
 if __name__ == "__main__":
     grw = GaussianRandomWalk(5, 2)
     cgrw = ConstrainedGaussianRandomWalk(0, 2, -1, 15)
-    print "gauss   constr"
+    print("gauss   constr")
     for i in range(100):
-        print "%8.2f %8.2f" % (grw.next(), cgrw.next())
+        print(("%8.2f %8.2f" % (next(grw), next(cgrw))))

@@ -18,7 +18,7 @@ History:
 2009-08-04 ROwen    Added radialLine.
 """
 import math
-import Tkinter
+import tkinter
 import RO.MathUtil
 
 def ctrCircle(cnv, xpos, ypos, rad, width = 1, **kargs):
@@ -177,7 +177,7 @@ class Spiral(object):
             "arrow":"both",
             "arrowshape":(0,0,3),
         }
-        if kargs.has_key("capstyle"):
+        if "capstyle" in kargs:
             del(defKArgs["arrow"])
             del(defKArgs["arrowshape"])
         self.drawKArgs = defKArgs
@@ -198,7 +198,7 @@ class Spiral(object):
 
     def setAngLim(self, begAng, endAng, redraw=True):
         if (begAng != None) and (begAng == endAng):
-            raise RuntimeError, "angle range must be nonzero (though it may be None)"
+            raise RuntimeError("angle range must be nonzero (though it may be None)")
         self.begAng = begAng
         self.endAng = endAng
         if redraw:
@@ -252,7 +252,7 @@ if __name__ == '__main__':
     from RO.Wdg.PythonTk import PythonTk
     root = PythonTk()
 
-    cnv = Tkinter.Canvas (root, width=201, height=201)
+    cnv = tkinter.Canvas (root, width=201, height=201)
     cnv.pack()
     ctrPlus  (cnv,  80,  80, 10, 5)
     ctrPlus  (cnv, 100,  80, 10, 5, 5)

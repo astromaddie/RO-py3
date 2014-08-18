@@ -33,7 +33,7 @@ class IDGen(object):
             if self.nSteps < 1:
                 raise ValueError("no id numbers in range %s:%s:%s" % (startVal, wrapVal, incr))
     
-    def next(self):
+    def __next__(self):
         """Return the next ID number."""
         newID = self.startVal + (self.ind * self.incr)
         self.ind += 1

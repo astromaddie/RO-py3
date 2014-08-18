@@ -19,7 +19,7 @@ History:
 2006-10-24 ROwen    Added support for RO.Constants.sevDebug.
 """
 import RO.Constants
-import WdgPrefs
+from . import WdgPrefs
 
 class SeverityMixin(object):
     """Mixin class that adds a severity attribute
@@ -67,7 +67,7 @@ class SeverityMixin(object):
                     # set severityPrefDict and subscribe to prefs;
                     # then test severity again
                     self._severityPrefDict = WdgPrefs.getSevPrefDict()
-                    for iterseverity, pref in self._severityPrefDict.iteritems():
+                    for iterseverity, pref in self._severityPrefDict.items():
                         if iterseverity == RO.Constants.sevNormal:
                             # normal foreground color is already automatically updated
                             continue
@@ -108,33 +108,33 @@ class SeveritySelectMixin(SeverityMixin):
 
 
 if __name__ == "__main__":
-    import Tkinter
-    import PythonTk
+    import tkinter
+    from . import PythonTk
     root = PythonTk.PythonTk()
     
-    class ColorButton(Tkinter.Button, SeverityActiveMixin):
+    class ColorButton(tkinter.Button, SeverityActiveMixin):
         def __init__(self, *args, **kargs):
-            Tkinter.Button.__init__(self, *args, **kargs)
+            tkinter.Button.__init__(self, *args, **kargs)
             SeverityActiveMixin.__init__(self)
 
-    class ColorCheckbutton(Tkinter.Checkbutton, SeverityActiveMixin):
+    class ColorCheckbutton(tkinter.Checkbutton, SeverityActiveMixin):
         def __init__(self, *args, **kargs):
-            Tkinter.Checkbutton.__init__(self, *args, **kargs)
+            tkinter.Checkbutton.__init__(self, *args, **kargs)
             SeverityActiveMixin.__init__(self)
 
-    class ColorEntry(Tkinter.Entry, SeveritySelectMixin):
+    class ColorEntry(tkinter.Entry, SeveritySelectMixin):
         def __init__(self, *args, **kargs):
-            Tkinter.Entry.__init__(self, *args, **kargs)
+            tkinter.Entry.__init__(self, *args, **kargs)
             SeveritySelectMixin.__init__(self)
 
-    class ColorLabel(Tkinter.Label, SeverityMixin):
+    class ColorLabel(tkinter.Label, SeverityMixin):
         def __init__(self, *args, **kargs):
-            Tkinter.Label.__init__(self, *args, **kargs)
+            tkinter.Label.__init__(self, *args, **kargs)
             SeverityMixin.__init__(self)
 
-    class ColorOptionMenu(Tkinter.OptionMenu, SeverityActiveMixin):
+    class ColorOptionMenu(tkinter.OptionMenu, SeverityActiveMixin):
         def __init__(self, *args, **kargs):
-            Tkinter.OptionMenu.__init__(self, *args, **kargs)
+            tkinter.OptionMenu.__init__(self, *args, **kargs)
             SeverityActiveMixin.__init__(self)
         
     def setSeverity(*args):
@@ -143,15 +143,15 @@ if __name__ == "__main__":
             "Warning": RO.Constants.sevWarning,
             "Error": RO.Constants.sevError,
         }.get(severityStr)
-        print "Set severity to %s = %r" % (severityStr, severity)
+        print("Set severity to %s = %r" % (severityStr, severity))
         for wdg in wdgSet:
             wdg.setSeverity(severity)
 
-    severityVar = Tkinter.StringVar()
+    severityVar = tkinter.StringVar()
     severityVar.set("Normal")
     severityVar.trace_variable("w", setSeverity)
     
-    entryVar = Tkinter.StringVar()
+    entryVar = tkinter.StringVar()
     entryVar.set("Entry")
     wdgSet = (
         ColorOptionMenu(root, severityVar, "Normal", "Warning", "Error",
@@ -174,6 +174,6 @@ if __name__ == "__main__":
         ),
     )
     for wdg in wdgSet:
-        wdg.pack(fill=Tkinter.X)
+        wdg.pack(fill=tkinter.X)
             
     root.mainloop()

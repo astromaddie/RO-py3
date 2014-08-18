@@ -42,9 +42,9 @@ class MatchList(object):
         else:
             errList = [val[-1] for val in self.valueList]
             if matchList:
-                raise ValueError, "too many matches for %r in %r" % (prefix, errList)
+                raise ValueError("too many matches for %r in %r" % (prefix, errList))
             else:
-                raise ValueError, "no matches for %r in %r" % (prefix, errList)
+                raise ValueError("no matches for %r in %r" % (prefix, errList))
     
     def matchKeys(self, fromDict):
         """Returns a copy of fromDict with keys replaced by their unique match.
@@ -53,10 +53,10 @@ class MatchList(object):
         If more than one key in fromDict has the same match, raises ValueError
         """
         toDict = {}
-        for fromKey, val in fromDict.iteritems():
+        for fromKey, val in list(fromDict.items()):
             toKey = self.getUniqueMatch(fromKey)
-            if toDict.has_key(toKey):
-                raise ValueError, "%r contains multiple keys that match %s" % (fromDict, toKey,)
+            if toKey in toDict:
+                raise ValueError("%r contains multiple keys that match %s" % (fromDict, toKey,))
             toDict[toKey] = val
         return toDict
     

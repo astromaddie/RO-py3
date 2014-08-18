@@ -199,7 +199,7 @@ def angSideAng (side_aa, ang_B, side_cc):
 
 if __name__ == "__main__":
     import RO.SeqUtil
-    print "testing angSideAng"
+    print("testing angSideAng")
     
     Eps = 1.0e-15
     EpsTest = Eps * 1.001
@@ -348,13 +348,13 @@ if __name__ == "__main__":
         procExpected = processOutput(expectedOutput)
         procActual = processOutput(actualOutput)
         if RO.SeqUtil.matchSequences(procExpected, procActual, rtol=1.0e-10, atol=1.0e-10):
-            print "failed on input:", testInput
-            print "expected output:", expectedOutput
-            print "actual output:", actualOutput
-            print
+            print("failed on input:", testInput)
+            print("expected output:", expectedOutput)
+            print("actual output:", actualOutput)
+            print()
         if actualOutput[0] < 0.0 or actualOutput[0] >= 360.0 \
             or actualOutput[1] < 0.0 or actualOutput[1] >= 360.0 \
             or actualOutput[2] < 0.0 or actualOutput[2] >= 360.0:
-            print "failed on input:", testInput
-            print "one or more angles out of range:", actualOutput
-            print
+            print("failed on input:", testInput)
+            print("one or more angles out of range:", actualOutput)
+            print()

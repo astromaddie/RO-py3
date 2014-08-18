@@ -39,12 +39,12 @@ History:
 
     quoteChar = astr[begInd]
     if quoteChar not in '\'\"':
-        raise SyntaxError, "invalid string delimiter :%s: starting at index %d in data :%s:" % \
-            (quoteChar, begInd, astr)
+        raise SyntaxError("invalid string delimiter :%s: starting at index %d in data :%s:" % \
+            (quoteChar, begInd, astr))
         return None
     if len(astr) <= begInd + 1:
         if len(astr) <= begInd:
-            raise IndexError, "begInd=%d out of range of data :%s:" % (begInd, astr)
+            raise IndexError("begInd=%d out of range of data :%s:" % (begInd, astr))
         else:
             sys.stderr.write("string starts at end of data :%s:\n" % (astr))
             return ("", None)
@@ -128,6 +128,6 @@ if __name__ == '__main__':
     for astr in testList:
         (data, ind) = getString(astr)
         if ind == None:
-            print "getString(%s) = %s, end of string" % (astr, getString(astr))
+            print("getString(%s) = %s, end of string" % (astr, getString(astr)))
         else:
-            print "getString(%s) = %s, astr[%d] = %s" % (astr, getString(astr), ind, astr[ind])
+            print("getString(%s) = %s, astr[%d] = %s" % (astr, getString(astr), ind, astr[ind]))

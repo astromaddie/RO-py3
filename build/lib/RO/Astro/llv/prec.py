@@ -6,7 +6,7 @@ P.T.Wallace   Starlink   10 July 1994
 2007-04-24 ROwen    Converted from Numeric to numpy (in test code).
 """
 import RO.PhysConst
-from euler import *
+from .euler import *
 
 def prec (begEpoch, endEpoch):
     """
@@ -62,7 +62,7 @@ def prec (begEpoch, endEpoch):
 
 if __name__ == "__main__":
     import numpy
-    print "testing prec"
+    print("testing prec")
     # testData is a list of duples consisting of:
     # - a tuple of input data for prec
     # - the expected output matrix (a numpy.array)
@@ -91,6 +91,6 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = prec(*testInput)
         if not numpy.allclose(actualOutput, expectedOutput, rtol=1e-15, atol=1e-15):
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)

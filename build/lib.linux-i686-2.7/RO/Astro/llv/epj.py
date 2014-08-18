@@ -21,7 +21,7 @@ def epj (mjd):
 
 if __name__ == "__main__":
     import RO.MathUtil
-    print "testing epj"
+    print("testing epj")
     # testData is a list of duples consisting of:
     # - input data
     # - the expected output
@@ -34,6 +34,6 @@ if __name__ == "__main__":
     for testInput, expectedOutput in testData:
         actualOutput = epj(testInput)
         if 0 != RO.MathUtil.compareFloats(actualOutput, expectedOutput, rtol=1e-15):
-            print "failed on input:", testInput
-            print "expected output:", expectedOutput
-            print "actual output  :", actualOutput
+            print("failed on input:", testInput)
+            print("expected output:", expectedOutput)
+            print("actual output  :", actualOutput)

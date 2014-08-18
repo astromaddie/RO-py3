@@ -51,16 +51,16 @@ History:
 __all__ = ['Label', 'BoolLabel', 'StrLabel', 'IntLabel', 'FloatLabel', 'DMSLabel']
 
 import sys
-import Tkinter
+import tkinter
 import RO.Constants
 import RO.MathUtil
 import RO.StringUtil
-import CtxMenu
-import WdgPrefs
-from SeverityMixin import SeverityMixin
-from IsCurrentMixin import IsCurrentMixin
+from . import CtxMenu
+from . import WdgPrefs
+from .SeverityMixin import SeverityMixin
+from .IsCurrentMixin import IsCurrentMixin
 
-class Label(Tkinter.Label, CtxMenu.CtxMenuMixin, IsCurrentMixin, SeverityMixin):
+class Label(tkinter.Label, CtxMenu.CtxMenuMixin, IsCurrentMixin, SeverityMixin):
     """Base class for labels (display ROWdgs); do not use directly.
     
     Inputs:
@@ -86,7 +86,7 @@ class Label(Tkinter.Label, CtxMenu.CtxMenuMixin, IsCurrentMixin, SeverityMixin):
     def __init__ (self,
         master,
         formatStr = None,
-        formatFunc = unicode,       
+        formatFunc = str,       
         helpText = None,
         helpURL = None,
         isCurrent = True,
@@ -95,7 +95,7 @@ class Label(Tkinter.Label, CtxMenu.CtxMenuMixin, IsCurrentMixin, SeverityMixin):
         kargs.setdefault("anchor", "e")
         kargs.setdefault("justify", "right")
         
-        Tkinter.Label.__init__(self, master, **kargs)
+        tkinter.Label.__init__(self, master, **kargs)
         
         CtxMenu.CtxMenuMixin.__init__(self, helpURL=helpURL)
         
@@ -180,7 +180,7 @@ class Label(Tkinter.Label, CtxMenu.CtxMenuMixin, IsCurrentMixin, SeverityMixin):
         else:
             try:
                 self["text"] = self._formatFunc(self._value)
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("format of value %r failed with error: %s\n" % (self._value, e))
                 self["text"] = "?%r?" % (self._value,)
 
@@ -198,8 +198,8 @@ class BoolLabel(Label):
         isCurrent = True,
         **kargs
     ):
-        assert not kargs.has_key("formatStr"), "formatStr not allowed for %s" % self.__class__.__name__
-        assert not kargs.has_key("formatFunc"), "formatFunc not allowed for %s" % self.__class__.__name__
+        assert "formatStr" not in kargs, "formatStr not allowed for %s" % self.__class__.__name__
+        assert "formatFunc" not in kargs, "formatFunc not allowed for %s" % self.__class__.__name__
 
         def formatFnct(val):
             if val:
@@ -249,7 +249,7 @@ class IntLabel(Label):
         **kargs
     ):
         kargs.setdefault("formatStr", "%d")
-        assert not kargs.has_key("formatFunc"), "formatFunc not allowed for %s" % self.__class__.__name__
+        assert "formatFunc" not in kargs, "formatFunc not allowed for %s" % self.__class__.__name__
         
         Label.__init__(self,
             master,
@@ -279,7 +279,7 @@ class FloatLabel(Label):
         helpURL = None,
         isCurrent = True,
     **kargs):
-        assert not kargs.has_key("formatFunc"), "formatFunc not allowed for %s" % self.__class__.__name__
+        assert "formatFunc" not in kargs, "formatFunc not allowed for %s" % self.__class__.__name__
 
         # handle default format string
         if formatStr == None:
@@ -289,7 +289,7 @@ class FloatLabel(Label):
         try:
             formatStr % (1.1,)
         except:
-            raise ValueError, "Invalid floating point format string %s" % (formatStr,)
+            raise ValueError("Invalid floating point format string %s" % (formatStr,))
 
         Label.__init__(self,
             master,
@@ -320,8 +320,8 @@ class DMSLabel(Label):
         helpURL = None,
         isCurrent = True,
     **kargs):
-        assert not kargs.has_key("formatStr"), "formatStr not allowed for %s" % self.__class__.__name__
-        assert not kargs.has_key("formatFunc"), "formatFunc not allowed for %s" % self.__class__.__name__
+        assert "formatStr" not in kargs, "formatStr not allowed for %s" % self.__class__.__name__
+        assert "formatFunc" not in kargs, "formatFunc not allowed for %s" % self.__class__.__name__
         
         self.precision = precision
         self.nFields = nFields
@@ -351,7 +351,7 @@ class DMSLabel(Label):
 
 
 if __name__ == "__main__":
-    import PythonTk
+    from . import PythonTk
     from RO.TkUtil import Timer
     root = PythonTk.PythonTk()
 
@@ -389,7 +389,7 @@ if __name__ == "__main__":
         ),
     )
     for wdg in wdgSet:
-        wdg.pack(fill=Tkinter.X)
+        wdg.pack(fill=tkinter.X)
     
     # a list of (value, isCurrent) pairs
     testData = [
@@ -413,7 +413,7 @@ if __name__ == "__main__":
     def displayNext():
         global ind, testData
         val = testData[ind]
-        print "\nvalue = %r, isCurrent = %s" % tuple(val)
+        print("\nvalue = %r, isCurrent = %s" % tuple(val))
         for wdg in wdgSet:
             wdg.set(*val)
         ind += 1

@@ -2,8 +2,8 @@
 import math
 import RO.MathUtil
 import RO.SysConst
-from DCFromSC import *
-from SCFromDC import *
+from .DCFromSC import *
+from .SCFromDC import *
 from RO.Astro import Cnv
 
 def haDecFromAzAlt (azAlt, lat):
@@ -47,9 +47,9 @@ def haDecFromAzAlt (azAlt, lat):
 
 
 if __name__ == "__main__":
-    from AngSep import angSep
+    from .AngSep import angSep
     MaxErrArcSec = 1e-6 # max error on sky, in arc seconds
-    print "testing haDecFromAzAlt"
+    print("testing haDecFromAzAlt")
     # test data is formatted as follows:
     # a list of entries, each consisting of:
     # - the input argument
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         actualOutput = haDecFromAzAlt(*testInput)
         errOnSkyArcSec = angSep(actualOutput[0], expectedOutput[0]) * 3600.0
         if actualOutput[1] != expectedOutput[1] or errOnSkyArcSec > MaxErrArcSec:
-            print "failed on input:", testInput
-            print "expected output:\n", expectedOutput
-            print "actual output:\n", actualOutput
-            print "error on sky = %s\"" % errOnSkyArcSec
+            print("failed on input:", testInput)
+            print("expected output:\n", expectedOutput)
+            print("actual output:\n", actualOutput)
+            print("error on sky = %s\"" % errOnSkyArcSec)

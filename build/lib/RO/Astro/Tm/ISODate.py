@@ -1,4 +1,4 @@
-from __future__ import division, absolute_import
+
 """Routines to format date and time as ISO date
 
 History:

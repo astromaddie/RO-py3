@@ -35,10 +35,10 @@ History:
 """
 __all__ = ['Gridder']
 
-import Tkinter
+import tkinter
 import RO.Alg
 import RO.SeqUtil
-import Label
+from . import Label
 
 class Gridder(object):
     def __init__(self,
@@ -93,13 +93,13 @@ class Gridder(object):
         """
         # verify that the widget can be used before subscribing to it
         if not hasattr(ctrl, "addCallback"):
-            raise TypeError, "widget %r does not have addCallback method" % cat
+            raise TypeError("widget %r does not have addCallback method" % cat)
         if not hasattr(ctrl, "getBool"):
-            raise TypeError, "widget %r does not have getBool method" % cat
+            raise TypeError("widget %r does not have getBool method" % cat)
         
         # record show/hide controls 
         self._showHideControlDict[cat] = ctrl
-        for ctrl in self._showHideControlDict.itervalues():
+        for ctrl in self._showHideControlDict.values():
             ctrl.addCallback(self._showHideWdgCallback)
         
         # add category, if necessary
@@ -241,14 +241,14 @@ class Gridder(object):
         Raises KeyError if a specified category does not already exist.
         """
         # update _showHideCatDict
-        for cat, doShow in kargs.iteritems():
+        for cat, doShow in kargs.items():
             # make sure the category already exists
             self._showHideCatDict[cat]
             # set the category
             self._showHideCatDict[cat] = doShow
             
         # use _showHideCatDict to show or hide widgets
-        for wdg, catList in self._showHideWdgDict.iteritems():
+        for wdg, catList in self._showHideWdgDict.items():
             for cat in catList:
                 if not self._showHideCatDict[cat]:
                     wdg.grid_remove()
@@ -279,8 +279,8 @@ class Gridder(object):
         if spacing:
             spaceCol = newDefCol - 1
             if spaceCol < self._maxNextCol:
-                raise ValueError, "col too small; no room for spacer column"
-            Tkinter.Frame(self._master, width=spacing).grid(row=row, column=spaceCol)
+                raise ValueError("col too small; no room for spacer column")
+            tkinter.Frame(self._master, width=spacing).grid(row=row, column=spaceCol)
 
         self.setDefCol(newDefCol)
 
@@ -299,7 +299,7 @@ class Gridder(object):
     def _showHideWdgCallback(self, wdg=None):
         """Called if any showHide widget changes state.
         """
-        for cat, wdg in self._showHideControlDict.iteritems():
+        for cat, wdg in self._showHideControlDict.items():
             self._showHideCatDict[cat] = wdg.getBool()
 
         self.showHideWdg()
@@ -378,11 +378,11 @@ class _BaseGridSet:
         """
         if wdgInfo in (None, False):
             return wdgInfo
-        elif isinstance(wdgInfo, Tkinter.Widget):
+        elif isinstance(wdgInfo, tkinter.Widget):
             # a widget; assume it's a Label widget of some kind
             return wdgInfo
         
-        if isinstance(wdgInfo, Tkinter.Variable):
+        if isinstance(wdgInfo, tkinter.Variable):
             # a Tkinter variable
             wdg = Label.StrLabel(
                 master = self.master,
@@ -491,35 +491,35 @@ class _GridSet (_BaseGridSet):
         self._gridWdg(self.unitsWdg, sticky="w", colSpan=1)
 
 if __name__ == "__main__":
-    import PythonTk
+    from . import PythonTk
     root = PythonTk.PythonTk()
     
-    wdgFrame = Tkinter.Frame(root)
+    wdgFrame = tkinter.Frame(root)
     gr = Gridder(wdgFrame)
     gr.gridWdg (
         label = "Opt 1",
-        dataWdg = Tkinter.Entry(wdgFrame, width=5),
+        dataWdg = tkinter.Entry(wdgFrame, width=5),
         units = "mHz",
     )
-    sv = Tkinter.StringVar()
+    sv = tkinter.StringVar()
     sv.set("Option 2")
     gs = gr.gridWdg (
         label = sv,
-        dataWdg = Tkinter.Entry(wdgFrame, width=5),
+        dataWdg = tkinter.Entry(wdgFrame, width=5),
         units = "bars",
     )
     gr.gridWdg (
-        label = Tkinter.Label(wdgFrame, text="No Units"),
-        dataWdg = Tkinter.Entry(wdgFrame, width=5),
+        label = tkinter.Label(wdgFrame, text="No Units"),
+        dataWdg = tkinter.Entry(wdgFrame, width=5),
     )
     gr.gridWdg (
         label = "Blank Units",
-        dataWdg = Tkinter.Entry(wdgFrame, width=5),
+        dataWdg = tkinter.Entry(wdgFrame, width=5),
         units = "",
     )
     gr.gridWdg (
         label = "Pair",
-        dataWdg = [Tkinter.Entry(wdgFrame, width=5) for ii in range(2)],
+        dataWdg = [tkinter.Entry(wdgFrame, width=5) for ii in range(2)],
     )
     wdgFrame.pack()
     

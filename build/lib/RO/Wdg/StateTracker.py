@@ -93,7 +93,7 @@ class StateTracker(object):
     def getState(self):
         """Get the state of all items as a dictionary of name: value
         """
-        stateDict = dict((name, item.getFunc()) for name, item in self._itemDict.iteritems())
+        stateDict = dict((name, item.getFunc()) for name, item in self._itemDict.items())
         return stateDict
     
     def setState(self, stateDict):
@@ -102,11 +102,11 @@ class StateTracker(object):
         Unknown and missing keys are ignored.
         If there is an error setting the state of an item a message is printed using logFunc.
         """
-        for name, val in stateDict.iteritems():
+        for name, val in stateDict.items():
             item = self._itemDict.get(name)
             if item != None:
                 try:
                     item.setFunc(val)
-                except Exception, e:
+                except Exception as e:
                     self._logFunc("Failed to set %s to %r: %s\n" % (name, val, RO.StringUtil.strFromException(e)), severity=RO.Constants.sevWarning)
  

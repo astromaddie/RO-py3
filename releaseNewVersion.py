@@ -18,7 +18,7 @@ PkgDir = os.path.join(PkgRoot, PkgName)
 sys.path.insert(0, PkgDir)
 import Version
 queryStr = "Version from RO.Version = %s; is this OK? (y/[n]) " % (Version.__version__,)
-versOK = input(queryStr)
+versOK = eval(input(queryStr))
 if not versOK.lower() == "y":
     sys.exit(0)
 
@@ -32,14 +32,14 @@ with file(os.path.join("docs", "VersionHistory.html")) as vhist:
                 print("Version in VersionHistory.html matches")
                 break
             else:
-                print("Error: version in VersionHistory.html = %s != %s" % (histVersStr, Version.__version__))
+                print(("Error: version in VersionHistory.html = %s != %s" % (histVersStr, Version.__version__)))
                 sys.exit(0)
 
 print("Status of subversion repository:")
 
 subprocess.call(["svn", "status"])
 
-versOK = input("Is the subversion repository up to date? (y/[n]) ")
+versOK = eval(input("Is the subversion repository up to date? (y/[n]) "))
 if not versOK.lower() == "y":
     sys.exit(0)
 
@@ -65,7 +65,7 @@ except Exception:
     sys.exit(1)
 
 
-print("Deleting test build %r" % (distDir,))
+print(("Deleting test build %r" % (distDir,)))
 shutil.rmtree(distDir)
 
 print("Building final build and uploading")
@@ -75,10 +75,10 @@ if status != 0:
 
 eggDir = os.path.abspath("RO.egg-info")
 
-print("Deleting final build %r" % (distDir,))
+print(("Deleting final build %r" % (distDir,)))
 shutil.rmtree(distDir)
 
-print("Deleting egg info %r" % (eggDir,))
+print(("Deleting egg info %r" % (eggDir,)))
 shutil.rmtree(eggDir)
 
 print("***** Update documentation on the UW server! *****")

@@ -33,10 +33,10 @@ History:
 __all__ = ['OptionButtons']
 
 import RO.InputCont
-import Button
-import Checkbutton
-import InputContFrame
-import Label
+from . import Button
+from . import Checkbutton
+from . import InputContFrame
+from . import Label
 
 class OptionButtons(InputContFrame.InputContFrame):
     def __init__ (self,
@@ -175,11 +175,11 @@ class OptionButtons(InputContFrame.InputContFrame):
             wdg.pack(side="top", anchor="nw")
     
 if __name__ == "__main__":
-    import PythonTk
+    from . import PythonTk
     root = PythonTk.PythonTk()
 
     def doPrint():
-        print "getString() = %r" % (optFrame.getString(),)
+        print("getString() = %r" % (optFrame.getString(),))
     
     def setEnable(wdg=None):
         optFrame.setEnable(enableButton.getBool())
