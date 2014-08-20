@@ -22,11 +22,11 @@ class ListPlus (list):
             return False
     
     def iteritems(self):
-        for key in self.keys():
+        for key in list(self.keys()):
             yield (key, self[key])
 
     def iterkeys(self):
-        return iter(range(len(self)))
+        return iter(list(range(len(self))))
 
     def itervalues(self):
         return iter(self)

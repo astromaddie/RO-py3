@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 """Retrieve a remote file via http to a local file.
 
 Note: at exit attempts to abort all outsanding transfers

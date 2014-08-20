@@ -23,8 +23,8 @@ if __name__ == "__main__":
     print("MultiListIter example")
     a = list(range(5))
     b = [x**2 for x in a]
-    print("a = %r" % a)
-    print("b = %r" % b)
+    print(("a = %r" % a))
+    print(("b = %r" % b))
     print("for res in MultiListIter(a, b):")
     for res in MultiListIter(a, b):
-        print("\t%r" % (res,))
+        print(("\t%r" % (res,)))

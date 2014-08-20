@@ -1,3 +1,4 @@
+from __future__ import print_function
 # subprocess - Subprocesses with accessible I/O streams
 #
 # For more information about this module, see PEP 324.

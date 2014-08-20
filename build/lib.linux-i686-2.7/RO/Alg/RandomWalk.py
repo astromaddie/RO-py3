@@ -61,4 +61,4 @@ if __name__ == "__main__":
     cgrw = ConstrainedGaussianRandomWalk(0, 2, -1, 15)
     print("gauss   constr")
     for i in range(100):
-        print("%8.2f %8.2f" % (next(grw), next(cgrw)))
+        print(("%8.2f %8.2f" % (next(grw), next(cgrw))))
